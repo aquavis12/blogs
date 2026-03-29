@@ -297,7 +297,7 @@
       </div>
       <div class="step">
         <div class="snum2">03</div>
-        <div class="step-body"><h4>Destination VPC — ENET-NETWORKS(10.13.0.0/16)</h4><p>Target network hosting the NETWORK appliance. VPC attachment <code>tgw-attach-dummy-ivanti</code> was active and propagated. Still looked fine on paper.</p></div>
+        <div class="step-body"><h4>Destination VPC — AZ-CORENET-SPOKE (10.13.0.0/16)</h4><p>Target network hosting the internal network appliance. VPC attachment <code>tgw-attach-dummy-corenet</code> was active and propagated. Still looked fine on paper.</p></div>
       </div>
       <div class="step">
         <div class="snum2">04</div>
@@ -341,11 +341,11 @@
         <div><span class="tw">⚠ Reachability status: NOT REACHABLE</span></div>
         <div><span class="tr">✗ ExplanationCode: NO_ROUTE_TO_DESTINATION</span></div>
         <div><span class="to">  RouteTable: rtb-0dummy8b7fd02136c64be</span></div>
-        <div><span class="to">  VPC: vpc-0dummy4602d8c81581a19 (AZ-IVANTI-NETWORKS)</span></div>
+        <div><span class="to">  VPC: vpc-0dummy4602d8c81581a19 (AZ-CORENET-SPOKE)</span></div>
       </div>
     </div>
 
-    <p>One analysis. One definitive answer. The route table <code>rtb-0dummy8b7fd02136c64be</code> in the destination VPC had no route back to the TGW for the <code>10.110.0.0/16</code> network. Traffic was arriving at the Networks VPC correctly — but the return path was completely absent.</p>
+    <p>One analysis. One definitive answer. The route table <code>rtb-0dummy8b7fd02136c64be</code> in the destination VPC had no route back to the TGW for the <code>10.110.0.0/16</code> network. Traffic was arriving at the spoke VPC correctly — but the return path was completely absent.</p>
 
     <div class="callout">
       <div class="clabel teal">Cost: $0.10</div>
@@ -370,7 +370,7 @@
         <div class="ac-field"><div class="ac-label">Analysis ID</div><div class="ac-value">nia-0dummy34b64a96621d6</div></div>
         <div class="ac-field"><div class="ac-label">Path ID</div><div class="ac-value">nip-0dummy1b35057d8b20</div></div>
         <div class="ac-field"><div class="ac-label">Source</div><div class="ac-value">i-0dummy12345abcdef<br/><span style="color:var(--text3);font-size:11px">Windows Jump Server</span></div></div>
-        <div class="ac-field"><div class="ac-label">Destination</div><div class="ac-value">tgw-attach-0dummy607148015<br/><span style="color:var(--text3);font-size:11px">transit-gateway-ivanti</span></div></div>
+        <div class="ac-field"><div class="ac-label">Destination</div><div class="ac-value">tgw-attach-0dummy607148015<br/><span style="color:var(--text3);font-size:11px">transit-gateway-corenet</span></div></div>
         <div class="ac-field"><div class="ac-label">Protocol</div><div class="ac-value">TCP · all ports</div></div>
         <div class="ac-field"><div class="ac-label">Analysis date</div><div class="ac-value">March 28, 2026 · 17:59 UTC+5:30</div></div>
       </div>
@@ -468,7 +468,7 @@
           <div class="hop-body">
             <div class="hop-type">TGW Route Table</div>
             <div class="hop-name">tgw-rtb-0dummy625a5c9492e01380</div>
-            <div class="hop-detail">Route for 10.13.0.0/16 → tgw-attach-0dummyivanti · Active, Propagated</div>
+            <div class="hop-detail">Route for 10.13.0.0/16 → tgw-attach-0dummycorenet · Active, Propagated</div>
           </div>
           <span class="hop-status"><span class="pill pg">✓</span></span>
         </div>
@@ -477,7 +477,7 @@
           <span class="hop-icon">🎯</span>
           <div class="hop-body">
             <div class="hop-type">Transit Gateway Attachment · Destination</div>
-            <div class="hop-name">tgw-attach-0dummyivanti (transit-gateway-ivanti)</div>
+            <div class="hop-name">tgw-attach-0dummycorenet (transit-gateway-corenet)</div>
             <div class="hop-detail">Inbound: 10.13.0.0/16 · Src: 10.110.10.174/32 · TCP</div>
           </div>
           <span class="hop-status"><span class="pill pg">✓</span></span>
@@ -581,7 +581,7 @@
         <div><span class="tr">ExplanationCode</span>  <span class="tc">NO_ROUTE_TO_DESTINATION</span></div>
         <div><span class="tw">RouteTable</span>       <span class="ti">rtb-0dummy8b7fd02136c64be</span></div>
         <div><span class="tw">VPC</span>              <span class="ti">vpc-0dummy4602d8c81581a19</span></div>
-        <div><span class="tw">VPC Name</span>         <span class="tc">AZ-IVANTI-NETWORKS</span></div>
+        <div><span class="tw">VPC Name</span>         <span class="tc">AZ-CORENET-SPOKE</span></div>
         <div>&nbsp;</div>
         <div><span class="to"># Route table had only 2 routes:</span></div>
         <div><span class="ts">0.0.0.0/0</span>       <span class="tc">→ igw-0dummy6bda2b518458269b</span>  <span class="to">(internet gateway)</span></div>
@@ -592,7 +592,7 @@
       </div>
     </div>
 
-    <p>The destination VPC's subnet route table was pointed entirely at an internet gateway for external traffic and had a local route for its own CIDR — but <strong style="color:var(--text)">no route back through the Transit Gateway</strong> for any of the internal <code>10.x.x.x</code> networks. Traffic from the jump server was arriving at the Networks VPC successfully. The response packets had nowhere to go.</p>
+    <p>The destination VPC's subnet route table was pointed entirely at an internet gateway for external traffic and had a local route for its own CIDR — but <strong style="color:var(--text)">no route back through the Transit Gateway</strong> for any of the internal <code>10.x.x.x</code> networks. Traffic from the jump server was arriving at the spoke VPC successfully. The response packets had nowhere to go.</p>
 
     <div class="callout red">
       <div class="clabel red">Classic TGW gotcha</div>
@@ -646,7 +646,7 @@
     <div class="steps">
       <div class="step">
         <div class="snum2" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.25);color:var(--green)">✓</div>
-        <div class="step-body"><h4>Navigate to destination subnet route table</h4><p>VPC → Route Tables → filter by VPC <code>vpc-0dummy4602d8c81581a19</code> (AZ-IVANTI-NETWORKS)</p></div>
+        <div class="step-body"><h4>Navigate to destination subnet route table</h4><p>VPC → Route Tables → filter by VPC <code>vpc-0dummy4602d8c81581a19</code> (AZ-CORENET-SPOKE)</p></div>
       </div>
       <div class="step">
         <div class="snum2" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.25);color:var(--green)">✓</div>
