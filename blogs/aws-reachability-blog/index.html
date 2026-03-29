@@ -297,7 +297,7 @@
       </div>
       <div class="step">
         <div class="snum2">03</div>
-        <div class="step-body"><h4>Destination VPC — AZ-IVANTI-NETWORKS (10.13.0.0/16)</h4><p>Target network hosting the Ivanti appliance. VPC attachment <code>tgw-attach-dummy-ivanti</code> was active and propagated. Still looked fine on paper.</p></div>
+        <div class="step-body"><h4>Destination VPC — ENET-NETWORKS(10.13.0.0/16)</h4><p>Target network hosting the NETWORK appliance. VPC attachment <code>tgw-attach-dummy-ivanti</code> was active and propagated. Still looked fine on paper.</p></div>
       </div>
       <div class="step">
         <div class="snum2">04</div>
@@ -345,7 +345,7 @@
       </div>
     </div>
 
-    <p>One analysis. One definitive answer. The route table <code>rtb-0dummy8b7fd02136c64be</code> in the destination VPC had no route back to the TGW for the <code>10.110.0.0/16</code> network. Traffic was arriving at the Ivanti VPC correctly — but the return path was completely absent.</p>
+    <p>One analysis. One definitive answer. The route table <code>rtb-0dummy8b7fd02136c64be</code> in the destination VPC had no route back to the TGW for the <code>10.110.0.0/16</code> network. Traffic was arriving at the Networks VPC correctly — but the return path was completely absent.</p>
 
     <div class="callout">
       <div class="clabel teal">Cost: $0.10</div>
@@ -592,7 +592,7 @@
       </div>
     </div>
 
-    <p>The destination VPC's subnet route table was pointed entirely at an internet gateway for external traffic and had a local route for its own CIDR — but <strong style="color:var(--text)">no route back through the Transit Gateway</strong> for any of the internal <code>10.x.x.x</code> networks. Traffic from the jump server was arriving at the Ivanti VPC successfully. The response packets had nowhere to go.</p>
+    <p>The destination VPC's subnet route table was pointed entirely at an internet gateway for external traffic and had a local route for its own CIDR — but <strong style="color:var(--text)">no route back through the Transit Gateway</strong> for any of the internal <code>10.x.x.x</code> networks. Traffic from the jump server was arriving at the Networks VPC successfully. The response packets had nowhere to go.</p>
 
     <div class="callout red">
       <div class="clabel red">Classic TGW gotcha</div>
