@@ -16,6 +16,69 @@
   --violet:#8b5cf6;--rose:#f43f5e;
   --r:14px;--rs:8px;
 }
+[data-theme="light"]{
+  --bg:#f8f6f0;--surface:#ffffff;--surface2:#f0ede6;
+  --border:#e2ddd6;--border2:#cdc8be;
+  --text:#1a1814;--muted:#6b6560;--dim:#a09a92;
+  --amber:#d4820a;--amber2:#b86e00;--amber-glow:rgba(212,130,10,.1);
+  --cyan:#008875;--cyan-glow:rgba(0,136,117,.1);
+  --violet:#6d3fd4;--rose:#c92d47;
+}
+[data-theme="light"] nav{background:rgba(248,246,240,.92);}
+[data-theme="light"] .stars{opacity:0.08;}
+[data-theme="light"] .hero::before{background:radial-gradient(circle,rgba(212,130,10,.07),transparent 70%);}
+[data-theme="light"] .dropdown-menu{background:rgba(255,255,255,.97);}
+[data-theme="light"] .lb{background:rgba(0,0,0,.85);}
+
+/* Fix gradient text becoming invisible on white bg */
+[data-theme="light"] .hero-text h1 .n{background:linear-gradient(135deg,#111,#444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+[data-theme="light"] .hero-text h1 .r{background:linear-gradient(135deg,var(--amber),var(--amber2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+[data-theme="light"] h1{background:linear-gradient(135deg,#111,#444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+[data-theme="light"] h1 span{background:linear-gradient(135deg,var(--amber),var(--amber2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* Fix other gradient/transparent text */
+[data-theme="light"] .sh{color:#111;-webkit-text-fill-color:#111;}
+[data-theme="light"] .sh em{color:var(--amber);-webkit-text-fill-color:var(--amber);}
+[data-theme="light"] .tt{color:#111;}
+[data-theme="light"] .aw h4{color:#111;}
+[data-theme="light"] .sc h3{color:#111;}
+[data-theme="light"] .yk h4{color:#111;}
+[data-theme="light"] .bf h3{color:#111;}
+[data-theme="light"] .bc h4{color:#111;}
+[data-theme="light"] .pr-title{color:#111;}
+[data-theme="light"] .agent-card h3{color:#111;}
+[data-theme="light"] .step-body h4{color:#111;}
+[data-theme="light"] .ac .av{color:#111;}
+[data-theme="light"] .cc{color:#444;}
+[data-theme="light"] .hero-sub{color:var(--muted);}
+[data-theme="light"] .hero-sub b{color:#111;}
+[data-theme="light"] .about-text b{color:#111;}
+[data-theme="light"] .logo{color:var(--amber);}
+[data-theme="light"] .cn{color:var(--amber);}
+
+/* Ensure cards and surfaces have visible borders */
+[data-theme="light"] .stats{box-shadow:0 2px 12px rgba(0,0,0,.08);}
+[data-theme="light"] .bf,.bf:hover,[data-theme="light"] .bc,[data-theme="light"] .aw,[data-theme="light"] .sc,[data-theme="light"] .yk{box-shadow:0 1px 6px rgba(0,0,0,.07);}
+
+/* Nav links readable */
+[data-theme="light"] .nav-links a{color:#555;}
+[data-theme="light"] .nav-links a:hover{color:var(--amber);}
+[data-theme="light"] .nav-dropdown>a{color:#555;}
+[data-theme="light"] .dropdown-menu a{color:#555;}
+[data-theme="light"] .dropdown-menu a:hover{color:var(--amber);}
+
+/* Footer */
+[data-theme="light"] footer{border-top-color:var(--border);}
+[data-theme="light"] .fl a{color:#666;}
+[data-theme="light"] .divider{background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.theme-toggle{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .3s;flex-shrink:0;outline:none;
+}
+.theme-toggle:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-glow);transform:rotate(20deg);}
 html{scroll-behavior:smooth;scroll-padding-top:80px;}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;line-height:1.6;overflow-x:hidden;}
 a{color:inherit;text-decoration:none;}
@@ -31,9 +94,42 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(18px);b
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;}
 .logo{font-family:'Space Mono',monospace;font-weight:700;font-size:1.1rem;color:var(--amber);}
 .logo span{color:var(--muted);font-weight:400;}
-.nav-links{display:flex;gap:1.8rem;}
+.nav-links{display:flex;gap:1.8rem;align-items:center;}
 .nav-links a{font-size:.82rem;font-weight:500;color:var(--muted);transition:color .3s;letter-spacing:.04em;text-transform:uppercase;}
 .nav-links a:hover{color:var(--amber);}
+
+/* Blog dropdown */
+.nav-dropdown{position:relative;}
+.nav-dropdown > a{display:flex;align-items:center;gap:.3rem;cursor:pointer;}
+.nav-dropdown > a::after{content:'▾';font-size:.7rem;transition:transform .25s;}
+.nav-dropdown:hover > a::after{transform:rotate(180deg);}
+.nav-dropdown > a{font-size:.82rem;font-weight:500;color:var(--muted);transition:color .3s;letter-spacing:.04em;text-transform:uppercase;}
+.nav-dropdown:hover > a{color:var(--amber);}
+.dropdown-menu{
+  position:absolute;top:calc(100% + 12px);right:0;
+  background:rgba(11,11,24,.97);backdrop-filter:blur(18px);
+  border:1px solid var(--border2);border-radius:var(--r);
+  min-width:280px;padding:.5rem 0;
+  opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:opacity .25s,transform .25s,visibility .25s;
+  z-index:200;
+}
+.nav-dropdown:hover .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0);}
+.dropdown-menu a{
+  display:block;padding:.65rem 1.1rem;
+  font-size:.78rem;font-weight:500;color:var(--muted);
+  text-transform:none;letter-spacing:0;
+  transition:background .2s,color .2s;
+  border-left:2px solid transparent;
+}
+.dropdown-menu a:hover{background:var(--amber-glow);color:var(--amber);border-left-color:var(--amber);}
+.dropdown-divider{height:1px;background:var(--border);margin:.3rem .8rem;}
+.dropdown-label{
+  padding:.4rem 1.1rem .2rem;
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  color:var(--dim);text-transform:uppercase;letter-spacing:.1em;
+}
+
 .ham{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px;}
 .ham span{width:20px;height:2px;background:var(--muted);border-radius:2px;}
 
@@ -174,6 +270,14 @@ section{position:relative;z-index:1;padding:5rem 2rem;}
 .ba a{display:inline-flex;align-items:center;gap:.4rem;color:var(--amber);font-weight:600;font-size:.85rem;border:1px solid rgba(255,159,28,.3);padding:.5rem 1.3rem;border-radius:99px;transition:all .3s;}
 .ba a:hover{background:var(--amber-glow);}
 
+/* Blog category filter tabs */
+.blog-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.8rem;}
+.btab{font-family:'Space Mono',monospace;font-size:.68rem;font-weight:700;padding:.4rem 1rem;border-radius:99px;border:1px solid var(--border2);color:var(--muted);cursor:pointer;transition:all .25s;background:transparent;letter-spacing:.05em;text-transform:uppercase;}
+.btab:hover{border-color:var(--amber);color:var(--amber);}
+.btab.active{background:var(--amber);color:#000;border-color:var(--amber);}
+.blog-post{transition:opacity .3s,transform .3s;}
+.blog-post.hidden{display:none;}
+
 /* Footer */
 footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:center;position:relative;z-index:1;}
 .fl{display:flex;justify-content:center;gap:1.8rem;margin-bottom:1.5rem;flex-wrap:wrap;}
@@ -204,6 +308,7 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
 @media(max-width:650px){
   .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(4,4,10,.96);flex-direction:column;padding:1.2rem 2rem;gap:1rem;border-bottom:1px solid var(--border);}
   .nav-links.open{display:flex;}
+  .nav-dropdown:hover .dropdown-menu{display:block;opacity:1;visibility:visible;transform:none;position:static;border:none;background:transparent;padding:0 0 0 1rem;}
   .ham{display:flex;}
   section{padding:3.5rem 1.2rem;}
   .hero{padding:6rem 1.2rem 4rem;}
@@ -227,8 +332,35 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
       <a href="#speaking">Speaking</a>
       <a href="#awards">Awards</a>
       <a href="#certs">Certs</a>
-      <a href="#blog">Blog</a>
+      <!-- Blog dropdown -->
+      <div class="nav-dropdown">
+        <a href="#blog">Blog ▾</a>
+        <div class="dropdown-menu">
+          <div class="dropdown-label">All Posts</div>
+          <a href="#blog" onclick="filterBlog('all')">📋 All Posts</a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-label">By Category</div>
+          <a href="#blog" onclick="filterBlog('aws')">☁️ AWS</a>
+          <a href="#blog" onclick="filterBlog('networking')">🌐 Networking</a>
+          <a href="#blog" onclick="filterBlog('security')">🔐 Security</a>
+          <a href="#blog" onclick="filterBlog('ai')">🤖 AI / Agentic</a>
+          <a href="#blog" onclick="filterBlog('devops')">⚙️ DevOps</a>
+          <a href="#blog" onclick="filterBlog('finops')">💰 FinOps / DR</a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-label">Featured</div>
+          <a href="blogs/aws-security-agent-blog/">🛡️ AWS Security Agent — Pentest</a>
+          <a href="blogs/aws-reachability-blog/">🔍 AWS Reachability Analyzer</a>
+          <a href="blogs/aws-transform-blog/">⚡ AWS Transform — Java Migration</a>
+          <a href="aws-devops-agent/index.html">🤖 AWS DevOps Agent</a>
+          <a href="https://technodiaryvishnu.hashnode.dev/secure-lint-and-validate-your-terraform-like-a-pro" target="_blank">🔷 Terraform Security & Linting</a>
+          <a href="https://dev.to/aws-builders/securing-your-code-with-aws-inspector-a-comprehensive-guide-to-code-security-scanning-499n" target="_blank">🔐 AWS Inspector Code Scanning</a>
+          <div class="dropdown-divider"></div>
+          <a href="https://dev.to/vishnu_rachapudi_75e73248" target="_blank" style="color:var(--cyan)">→ All posts on Dev.to</a>
+          <a href="https://technodiaryvishnu.hashnode.dev" target="_blank" style="color:var(--cyan)">→ All posts on Hashnode</a>
+        </div>
+      </div>
     </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
   </div>
 </nav>
 
@@ -273,7 +405,7 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
       <div class="ac"><div class="al">Education</div><div class="av">Chaitanya Bharathi Institute of Technology, Hyderabad</div></div>
       <div class="ac"><div class="al">Focus</div><div class="av">AWS Security · Gen AI · AEM · Cloud Architecture</div></div>
       <div class="ac"><div class="al">Community</div><div class="av"><a href="https://builder.aws.com/community/@vishnu1999" target="_blank">AWS Community Builder →</a></div></div>
-      <div class="ac"><div class="al">Email</div><div class="av"><a href="mailto:rachapudivishnu9@gmail.com">rachapudivishnu9@gmail.com</a></div></div>
+      <div class="ac"><div class="al">Email</div><div class="av"><a href="/cdn-cgi/l/email-protection#d3a1b2b0bbb2a3a6b7baa5baa0bbbda6ea93b4beb2babffdb0bcbe"><span class="__cf_email__" data-cfemail="b3c1d2d0dbd2c3c6d7dac5dac0dbddc68af3d4ded2dadf9dd0dcde">[email&#160;protected]</span></a></div></div>
     </div>
   </div>
 </section>
@@ -350,13 +482,13 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
         </div>
         <div class="yk">
           <iframe src="https://www.youtube.com/embed/f4Uj-xkZzn4?si=Z2RiBws4dO1uGpaz" title="TPT Connect" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          <div class="yi"><h4>The 0.1% Cloud Masterclass </h4><p>Jan 2026 · Hyderabad</p></div>
+          <div class="yi"><h4>The 0.1% Cloud Masterclass</h4><p>Jan 2026 · Hyderabad</p></div>
         </div>
         <div class="yk">
           <iframe src="https://www.youtube.com/embed/iE-hfSW42RY?si=l1TKi5MkfJq4jP00" title="Securing Your Code with AWS Inspector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           <div class="yi"><h4>Securing Your Code with AWS Inspector: A Comprehensive Guide to Code Security Scanning</h4><p>Jan 2026 · Online</p></div>
         </div>
-       <div class="yk">
+        <div class="yk">
           <iframe src="https://open.spotify.com/embed/episode/3OTnWRaYcl7FlQtArH3jel?utm_source=generator&amp;theme=0" title="Podcast" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" style="height:152px;"></iframe>
           <div class="yi"><h4>Learn2Upskill Podcast — AWS Cert Journey</h4><p>Jun 2025 · Spotify</p></div>
         </div>
@@ -423,33 +555,70 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
   <div class="si">
     <div class="stag fu">Writing</div>
     <h2 class="sh fu">From the <em>Blog</em></h2>
-        <a href="blogs/aws-security-agent-blog/" class="bf fu">
+
+    <!-- Category filter tabs -->
+    <div class="blog-tabs fu">
+      <button class="btab active" onclick="filterBlog('all')">All</button>
+      <button class="btab" onclick="filterBlog('aws')">☁️ AWS</button>
+      <button class="btab" onclick="filterBlog('networking')">🌐 Networking</button>
+      <button class="btab" onclick="filterBlog('security')">🔐 Security</button>
+      <button class="btab" onclick="filterBlog('ai')">🤖 AI / Agentic</button>
+      <button class="btab" onclick="filterBlog('devops')">⚙️ DevOps</button>
+      <button class="btab" onclick="filterBlog('finops')">💰 FinOps / DR</button>
+    </div>
+
+    <!-- Featured posts -->
+    <a href="blogs/aws-security-agent-blog/" class="bf fu blog-post" data-cat="aws security ai">
       <div class="ft">★ Latest</div>
-      <h3>I Pentested My Modernized Java App with AWS Security Agent—Here’s What It Found</h3>
-      <div class="bm"><span>Mar 2026</span><span>14 min</span><span class="t">AWS</span><span class="t">Security</span><span class="t">Agentic AI </span></div>
+      <h3>I Pentested My Modernized Java App with AWS Security Agent—Here's What It Found</h3>
+      <div class="bm"><span>Mar 2026</span><span>14 min</span><span class="t">AWS</span><span class="t">Security</span><span class="t">Agentic AI</span></div>
     </a>
-     <a href="blogs/aws-transform-blog/" class="bf fu">
-      <h3>I Modernized a Legacy Java App with AWS Transform—Here’s What Happened</h3>
-      <div class="bm"><span>Mar 2026</span><span>12 min</span><span class="t">AWS</span><span class="t">Transform</span><span class="t">Agentic AI </span></div>
+
+    <!-- NEW: Reachability Analyzer blog -->
+    <a href="blogs/aws-reachability-blog/" class="bf fu blog-post" data-cat="aws networking">
+      <div class="ft">🔍 New · Networking</div>
+      <h3>Stop Guessing. Start Tracing. — How AWS Reachability Analyzer Found Our Broken Network in Minutes</h3>
+      <p>10 VPCs, 1 Transit Gateway, and a jump server that couldn't reach anything. A complete walkthrough of diagnosing a silent routing failure hop-by-hop for $0.10.</p>
+      <div class="bm"><span>Mar 2026</span><span>8 min</span><span class="t">AWS</span><span class="t">Networking</span><span class="t">VPC</span><span class="t">Transit Gateway</span></div>
     </a>
-    <a href="aws-devops-agent/index.html" class="bf fu">
+
+    <a href="blogs/aws-transform-blog/" class="bf fu blog-post" data-cat="aws ai devops">
+      <h3>I Modernized a Legacy Java App with AWS Transform—Here's What Happened</h3>
+      <div class="bm"><span>Mar 2026</span><span>12 min</span><span class="t">AWS</span><span class="t">Transform</span><span class="t">Agentic AI</span></div>
+    </a>
+
+    <a href="aws-devops-agent/index.html" class="bf fu blog-post" data-cat="aws devops ai">
       <h3>I Tested AWS DevOps Agent — Here's What Happened When I Broke My EC2 Instance</h3>
       <p>A deliberate CPU stress test on a t2.medium, watching Amazon's frontier AI agent investigate in real time.</p>
       <div class="bm"><span>Mar 2026</span><span>8 min</span><span class="t">AWS</span><span class="t">DevOps</span><span class="t">AIOps</span></div>
     </a>
+
     <div class="bgr fu">
-      <a href="https://builder.aws.com/content/3AIQ6E9f2DnyQaNmHKuCZ5NpUUS/ship-your-mcp-server-to-aws-lambda-in-5-minutes" target="_blank" class="bc"><h4>Ship Your MCP Server to AWS Lambda in 5 Minutes</h4><div class="bm"><span>Mar 2026</span><span class="t">Lambda</span><span class="t">AI</span></div></a>
-      <a href="https://dev.to/aws-builders/how-exporting-amis-to-s3-helped-me-recover-customer-resources-during-a-dr-event-29d5" target="_blank" class="bc"><h4>How Exporting AMIs to S3 Helped Me Recover Resources During a DR Event</h4><div class="bm"><span class="t">EC2</span><span class="t">DR</span></div></a>
-      <a href="https://dev.to/aws-builders/cloudwatch-is-no-longer-just-for-logs-inside-awss-unified-operational-data-store-1a60" target="_blank" class="bc"><h4>CloudWatch Is No Longer Just for Logs: Unified Operational Data Store</h4><div class="bm"><span class="t">CloudWatch</span></div></a>
-      <a href="https://builder.aws.com/content/3AIQ6E9f2DnyQaNmHKuCZ5NpUUS/ship-your-mcp-server-to-aws-lambda-in-5-minutes" target="_blank" class="bc"><h4>From Image to HTTPS Endpoint in One Step with ECS Express Mode</h4><div class="bm"><span class="t">ECS</span><span class="t">Docker</span></div></a>
-      <a href="https://dev.to/aws-builders/stop-the-ebs-madness-automate-your-aws-storage-savings-now-p85" target="_blank" class="bc"><h4>Stop the EBS Madness: Automate Your AWS Storage Savings</h4><div class="bm"><span class="t">FinOps</span></div></a>
-      <a href="https://dev.to/aws-builders/building-an-aws-daily-helper-assistant-with-strands-agents-and-bedrock-agentcore-2290" target="_blank" class="bc"><h4>Building an AWS Daily Helper with Strands Agents &amp; Bedrock AgentCore</h4><div class="bm"><span class="t">GenAI</span><span class="t">Agents</span></div></a>
-      <a href="https://dev.to/aws-builders/building-trustworthy-ai-importance-of-guardrails-in-aws-bedrock-and-q-business-29bd" target="_blank" class="bc"><h4>Building Trustworthy AI: Guardrails in Bedrock &amp; Q Business</h4><div class="bm"><span class="t">AI</span><span class="t">Security</span></div></a>
-      <a href="https://builder.aws.com/content/3AIm3KP38KBLNdhVJVIYo0IWNP4/recovering-ebs-snapshots-with-coldsnap-a-real-dr-story-from-the-field" target="_blank" class="bc"><h4>Recovering EBS Snapshots with ColdSnap: A Real DR Story from the Field</h4><div class="bm"><span class="t">DR</span></div></a>
-      <a href="https://dev.to/aws-builders/5-secure-ways-to-connect-to-ec2-instances-including-ssh-key-recovery-made-easy-43ha" target="_blank" class="bc"><h4>5 Secure Ways to Connect to EC2 Instances — Including SSH Key Recovery Made Easy!</h4><div class="bm"><span class="t">Security</span></div></a>
+      <a href="https://builder.aws.com/content/3AIQ6E9f2DnyQaNmHKuCZ5NpUUS/ship-your-mcp-server-to-aws-lambda-in-5-minutes" target="_blank" class="bc blog-post" data-cat="aws ai"><h4>Ship Your MCP Server to AWS Lambda in 5 Minutes</h4><div class="bm"><span>Mar 2026</span><span class="t">Lambda</span><span class="t">AI</span></div></a>
+      <a href="https://dev.to/aws-builders/how-exporting-amis-to-s3-helped-me-recover-customer-resources-during-a-dr-event-29d5" target="_blank" class="bc blog-post" data-cat="aws finops"><h4>How Exporting AMIs to S3 Helped Me Recover Resources During a DR Event</h4><div class="bm"><span class="t">EC2</span><span class="t">DR</span></div></a>
+      <a href="https://dev.to/aws-builders/cloudwatch-is-no-longer-just-for-logs-inside-awss-unified-operational-data-store-1a60" target="_blank" class="bc blog-post" data-cat="aws devops"><h4>CloudWatch Is No Longer Just for Logs: Unified Operational Data Store</h4><div class="bm"><span class="t">CloudWatch</span></div></a>
+      <a href="https://builder.aws.com/content/3AIQ6E9f2DnyQaNmHKuCZ5NpUUS/ship-your-mcp-server-to-aws-lambda-in-5-minutes" target="_blank" class="bc blog-post" data-cat="aws devops"><h4>From Image to HTTPS Endpoint in One Step with ECS Express Mode</h4><div class="bm"><span class="t">ECS</span><span class="t">Docker</span></div></a>
+      <a href="https://dev.to/aws-builders/stop-the-ebs-madness-automate-your-aws-storage-savings-now-p85" target="_blank" class="bc blog-post" data-cat="aws finops"><h4>Stop the EBS Madness: Automate Your AWS Storage Savings</h4><div class="bm"><span class="t">FinOps</span></div></a>
+      <a href="https://dev.to/aws-builders/building-an-aws-daily-helper-assistant-with-strands-agents-and-bedrock-agentcore-2290" target="_blank" class="bc blog-post" data-cat="aws ai"><h4>Building an AWS Daily Helper with Strands Agents &amp; Bedrock AgentCore</h4><div class="bm"><span class="t">GenAI</span><span class="t">Agents</span></div></a>
+      <a href="https://dev.to/aws-builders/building-trustworthy-ai-importance-of-guardrails-in-aws-bedrock-and-q-business-29bd" target="_blank" class="bc blog-post" data-cat="aws ai security"><h4>Building Trustworthy AI: Guardrails in Bedrock &amp; Q Business</h4><div class="bm"><span class="t">AI</span><span class="t">Security</span></div></a>
+      <a href="https://builder.aws.com/content/3AIm3KP38KBLNdhVJVIYo0IWNP4/recovering-ebs-snapshots-with-coldsnap-a-real-dr-story-from-the-field" target="_blank" class="bc blog-post" data-cat="aws finops"><h4>Recovering EBS Snapshots with ColdSnap: A Real DR Story from the Field</h4><div class="bm"><span class="t">DR</span></div></a>
+      <a href="https://dev.to/aws-builders/5-secure-ways-to-connect-to-ec2-instances-including-ssh-key-recovery-made-easy-43ha" target="_blank" class="bc blog-post" data-cat="aws security"><h4>5 Secure Ways to Connect to EC2 Instances — Including SSH Key Recovery Made Easy!</h4><div class="bm"><span class="t">Security</span></div></a>
+      <a href="https://dev.to/aws-builders/securing-your-code-with-aws-inspector-a-comprehensive-guide-to-code-security-scanning-499n" target="_blank" class="bc blog-post" data-cat="aws security"><h4>Securing Your Code with AWS Inspector: A Comprehensive Guide to Code Security Scanning</h4><div class="bm"><span class="t">Security</span><span class="t">Inspector</span></div></a>
+      <a href="https://dev.to/vishnu_rachapudi_75e73248/introduction-to-iam-in-oci-1ffi" target="_blank" class="bc blog-post" data-cat="aws security"><h4>Introduction to IAM in Oracle Cloud Infrastructure</h4><div class="bm"><span class="t">OCI</span><span class="t">IAM</span><span class="t">Security</span></div></a>
+      <a href="https://dev.to/aws-builders/evolution-of-agentic-ai-co-amazon-quicksuite-2kh" target="_blank" class="bc blog-post" data-cat="aws ai"><h4>Evolution of Agentic AI Co — Amazon QuickSuite</h4><div class="bm"><span class="t">AI</span><span class="t">Agentic</span><span class="t">QuickSuite</span></div></a>
+      <a href="https://technodiaryvishnu.hashnode.dev/secure-lint-and-validate-your-terraform-like-a-pro" target="_blank" class="bc blog-post" data-cat="aws devops security"><h4>Secure, Lint and Validate Your Terraform Like a Pro</h4><div class="bm"><span class="t">Terraform</span><span class="t">DevOps</span><span class="t">Security</span></div></a>
+      <a href="https://technodiaryvishnu.hashnode.dev/aws-amplify-just-got-more-secure" target="_blank" class="bc blog-post" data-cat="aws security"><h4>AWS Amplify Just Got More Secure</h4><div class="bm"><span class="t">Amplify</span><span class="t">Security</span></div></a>
+      <a href="https://technodiaryvishnu.hashnode.dev/navigating-the-world-of-cdns" target="_blank" class="bc blog-post" data-cat="aws networking"><h4>Navigating the World of CDNs</h4><div class="bm"><span class="t">CDN</span><span class="t">Networking</span></div></a>
+      <a href="http://technodiaryvishnu.hashnode.dev/amazon-web-services" target="_blank" class="bc blog-post" data-cat="aws"><h4>Amazon Web Services — My First Blog Post ✨</h4><div class="bm"><span class="t">AWS</span><span class="t">Hashnode</span></div></a>
+      <a href="https://dev.to/vishnu_rachapudi_75e73248/oci-journey-part-2-networking-in-oracle-cloud-infrastructure-8lp" target="_blank" class="bc blog-post" data-cat="networking security"><h4>🌐 OCI Journey – Part 2: Networking in Oracle Cloud Infrastructure</h4><div class="bm"><span class="t">OCI</span><span class="t">Networking</span></div></a>
+      <a href="https://dev.to/vishnu_rachapudi_75e73248/oci-journey-part-3-compute-services-in-oracle-cloud-infrastructure-4b27" target="_blank" class="bc blog-post" data-cat="aws"><h4>💻 OCI Journey – Part 3: Compute Services in Oracle Cloud Infrastructure</h4><div class="bm"><span class="t">OCI</span><span class="t">Compute</span></div></a>
+      <a href="https://builder.aws.com/content/2rGVL9euypksp9avE0lKkskbz8j/full-aws-iot-greengrass-demo-end-to-end-setup-and-data-flow-edge-cloud" target="_blank" class="bc blog-post" data-cat="aws devops"><h4>Full AWS IoT Greengrass Demo — End-to-End Setup and Data Flow: Edge to Cloud</h4><div class="bm"><span class="t">AWS</span><span class="t">IoT</span><span class="t">Greengrass</span></div></a>
+      <a href="https://builder.aws.com/content/39yxTbDPETcqmS9iTbAJmmbxSWd/a-cleaner-calmer-way-to-connect-to-amazon-rds" target="_blank" class="bc blog-post" data-cat="aws security"><h4>A Cleaner, Calmer Way to Connect to Amazon RDS</h4><div class="bm"><span class="t">AWS</span><span class="t">RDS</span><span class="t">Security</span></div></a>
     </div>
+
     <div class="ba fu"><a href="https://dev.to/vishnu_rachapudi_75e73248" target="_blank">View all 39+ posts on Dev.to →</a></div>
     <div class="ba fu"><a href="https://builder.aws.com/community/@vishnu1999?tab=articles" target="_blank">View all 4+ posts on AWS Builder →</a></div>
+    <div class="ba fu"><a href="https://technodiaryvishnu.hashnode.dev" target="_blank">Read early posts on Hashnode →</a></div>
   </div>
 </section>
 <div class="divider"></div>
@@ -458,6 +627,7 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
   <div class="fl fu">
     <a href="https://www.linkedin.com/in/vishnu-rachapudi-28956920b/" target="_blank">LinkedIn</a>
     <a href="https://dev.to/vishnu_rachapudi_75e73248" target="_blank">Dev.to</a>
+    <a href="https://technodiaryvishnu.hashnode.dev" target="_blank">Hashnode</a>
     <a href="https://github.com/aquavis12" target="_blank">GitHub</a>
     <a href="https://www.credly.com/users/venkata-pavan-vishnu-rachapudi" target="_blank">Credly</a>
     <a href="https://builder.aws.com/community/@vishnu1999" target="_blank">AWS Builder</a>
@@ -468,13 +638,63 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:ce
 <!-- LIGHTBOX -->
 <div class="lb" id="lb" onclick="this.classList.remove('on')"><span class="x">×</span><img id="lbi" src="" alt=""></div>
 
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    html.setAttribute('data-theme', 'light');
+    btn.textContent = '☀️';
+    localStorage.setItem('theme', 'light');
+  }
+}
+// Restore saved theme
+(function(){
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = '☀️';
+    });
+  }
+})();
 
-<script>
+// Stars
 !function(){const s=document.getElementById('stars');for(let i=0;i<100;i++){const e=document.createElement('i');const z=Math.random()*2+.5;e.style.cssText='width:'+z+'px;height:'+z+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(Math.random()*5+2)+'s;animation-delay:'+Math.random()*5+'s;opacity:'+(.1+Math.random()*.4);s.appendChild(e)}}();
+
+// Scroll animations
 const o=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');o.unobserve(e.target)}})},{threshold:.07});
 document.querySelectorAll('.fu').forEach(e=>o.observe(e));
+
+// Mobile nav close
 document.querySelectorAll('nav a[href^="#"]').forEach(a=>a.addEventListener('click',()=>document.querySelector('.nav-links').classList.remove('open')));
-function openLB(el){document.getElementById('lbi').src=el.querySelector('img').src;document.getElementById('lb').classList.add('on')} 
+
+// Lightbox
+function openLB(el){document.getElementById('lbi').src=el.querySelector('img').src;document.getElementById('lb').classList.add('on')}
+
+// Blog filter
+function filterBlog(cat) {
+  // Update tab styles
+  document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Filter posts
+  document.querySelectorAll('.blog-post').forEach(post => {
+    if (cat === 'all') {
+      post.classList.remove('hidden');
+    } else {
+      const postCats = post.getAttribute('data-cat') || '';
+      postCats.includes(cat) ? post.classList.remove('hidden') : post.classList.add('hidden');
+    }
+  });
+}
 </script>
 </body>
 </html>
