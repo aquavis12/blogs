@@ -1,1 +1,499 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recovering EBS Snapshots with ColdSnap: A Real DR Story from the Field | Vishnu Rachapudi</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d0d;--bg2:#111;--bg3:#1a1a1a;
+  --border:#2a2a2a;
+  --text:#e2e2e2;--muted:#888;
+  --orange:#FF9900;--orange-dim:rgba(255,153,0,0.12);
+  --blue:#4a9eff;--blue-dim:rgba(74,158,255,0.1);
+  --green:#3fb950;--green-dim:rgba(63,185,80,0.1);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,0.1);
+  --red:#f85149;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',system-ui,sans-serif;
+  --r:8px;--rl:12px;
+}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap');
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.75}
+a{color:var(--orange);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nl{font-family:var(--mono);font-size:15px;color:var(--text);font-weight:600;letter-spacing:-.02em}
+.nl span{color:var(--orange)}
+.nt{display:flex;gap:20px}
+.nt a{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.nt a:hover{color:var(--orange);text-decoration:none}
+.na{display:flex;gap:24px}
+.na a{font-size:13px;color:var(--muted)}
+.na a:hover{color:var(--text);text-decoration:none}
+.hero{max-width:860px;margin:0 auto;padding:56px 24px 48px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.tag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid}
+.ta{color:var(--orange);border-color:rgba(255,153,0,.4);background:var(--orange-dim)}
+.tn{color:var(--purple);border-color:rgba(167,139,250,.4);background:var(--purple-dim)}
+.ti{color:var(--blue);border-color:rgba(74,158,255,.4);background:var(--blue-dim)}
+.td{color:var(--green);border-color:rgba(63,185,80,.4);background:var(--green-dim)}
+h1{font-size:2.5rem;font-weight:700;line-height:1.12;letter-spacing:-.03em;color:#fff;margin-bottom:14px}
+.sub{font-size:1.05rem;color:var(--muted);line-height:1.7;margin-bottom:28px;max-width:700px}
+.byline{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:48px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--orange);color:#000;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bn{font-size:14px;font-weight:600;color:#fff}
+.bro{font-size:12px;color:var(--muted);margin-top:2px}
+.bm{margin-left:auto;text-align:right;font-size:12px;color:var(--muted)}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px 100px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:48px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:18px 16px;text-align:center}
+.sn{font-size:1.8rem;font-weight:700;color:var(--orange);letter-spacing:-.02em;font-family:var(--mono)}
+.sl{font-size:12px;color:var(--muted);margin-top:4px}
+.sh{display:flex;align-items:center;gap:12px;margin:60px 0 0}
+.pill{background:var(--orange);color:#000;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:nowrap}
+.line{flex:1;height:1px;background:var(--border)}
+h2{font-size:1.65rem;font-weight:700;letter-spacing:-.025em;color:#fff;margin:16px 0 14px}
+h3{font-size:1.05rem;font-weight:600;color:#fff;margin:32px 0 10px}
+p{color:var(--text);margin-bottom:16px;line-height:1.8}
+.cal{border-left:3px solid var(--orange);background:var(--bg2);border-radius:0 var(--r) var(--r) 0;padding:14px 18px;margin:24px 0}
+.cal p{margin:0;font-size:14.5px}
+.cal-i{border-left-color:var(--blue)}
+.cal-s{border-left-color:var(--green)}
+.cal-w{border-left-color:#e3b341}
+pre{background:#0d1117;border:1px solid var(--border);border-radius:var(--rl);padding:20px;overflow-x:auto;margin:20px 0;font-family:var(--mono);font-size:13px;line-height:1.7}
+code{font-family:var(--mono);font-size:13px;color:#e6edf3}
+.ic{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);padding:1px 6px;border-radius:4px;color:#a5d6ff;white-space:nowrap}
+.kw{color:#ff7b72}.fn{color:#d2a8ff}.str{color:#a5d6ff}.cm{color:#8b949e;font-style:italic}.var{color:#ffa657}
+.iw{margin:28px 0;border-radius:var(--rl);overflow:hidden;border:1px solid var(--border)}
+.iw img{width:100%;display:block}
+.ic2{padding:9px 14px;font-size:12.5px;color:var(--muted);background:var(--bg2);border-top:1px solid var(--border);font-family:var(--mono)}
+.ss{margin:28px 0;border-radius:var(--rl);overflow:hidden;border:1px solid var(--border);background:var(--bg2)}
+.ss-inner{padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#0d1117,#111827)}
+.ss-bar{display:flex;gap:6px;margin-bottom:14px}
+.ss-dot{width:10px;height:10px;border-radius:50%}
+.ss-cmd{background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:10px 16px;font-family:var(--mono);font-size:12px;color:#7dd3a8;width:100%;max-width:580px;text-align:left}
+.ss-progress{width:100%;max-width:580px;background:#1a1a1a;border-radius:4px;height:6px;margin-top:10px;overflow:hidden}
+.ss-fill{height:100%;background:linear-gradient(90deg,var(--orange),#ffb347);border-radius:4px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+.cc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px}
+.ct{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px}
+.ci2{font-size:13.5px;padding:4px 0;display:flex;gap:8px;align-items:flex-start}
+.ck{color:var(--green)}.cx{color:var(--red)}
+.ucg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:24px 0}
+.uc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px}
+.ui{font-size:22px;margin-bottom:8px}
+.ut{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
+.ud{font-size:12.5px;color:var(--muted);line-height:1.6}
+.jb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);margin:20px 0;overflow:hidden}
+.jbt{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(255,153,0,0.06);display:flex;align-items:center;gap:8px}
+.jb pre{margin:0;border:none;border-radius:0;background:#0d1117}
+.arch{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin:24px 0}
+.ar{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--border)}
+.ar:last-child{border-bottom:none}
+.ai{width:34px;height:34px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.al{font-size:14px;font-weight:600;color:#fff}
+.as{font-size:12px;color:var(--muted);margin-top:2px}
+.aa{text-align:center;padding:3px;color:var(--orange);font-size:14px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.rst{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin:24px 0}
+.rsr{display:flex;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);align-items:flex-start}
+.rsr:last-child{border-bottom:none}
+.rsd{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--green);background:var(--green-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.rsd::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+.rsl{font-size:14px;font-weight:500;color:#fff}
+.rss{font-size:12px;color:var(--muted);margin-top:3px;font-family:var(--mono)}
+.hbox{background:var(--bg2);border:1px solid rgba(255,153,0,.3);border-radius:var(--rl);padding:18px 20px;margin:24px 0}
+.hbox-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--orange);margin-bottom:8px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+th{background:var(--bg2);color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;margin:32px 0}
+.toct{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.toc ol{padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.toc li{font-size:13.5px}
+.toc a{color:var(--text)}
+.toc a:hover{color:var(--orange);text-decoration:none}
+.auth{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:22px;margin:48px 0 0}
+.authn{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.authb{font-size:13px;color:var(--muted);line-height:1.55}
+@media(max-width:640px){h1{font-size:1.75rem}.stats,.cmp,.ucg{grid-template-columns:1fr}.nt{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:32px">
+    <a href="/" class="nl">vishnu<span>.</span></a>
+    <div class="nt">
+      <a href="#s1">incident</a>
+      <a href="#s2">coldsnap</a>
+      <a href="#s3">setup</a>
+      <a href="#s4">recovery</a>
+      <a href="#s5">vm export</a>
+      <a href="#s6">validation</a>
+    </div>
+  </div>
+  <div class="na">
+    <a href="https://www.vishnurachapudi.com/#blog">blog</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="tags">
+    <span class="tag ta">AWS</span>
+    <span class="tag tn">Disaster Recovery</span>
+    <span class="tag ti">EBS</span>
+    <span class="tag td">Incident Response</span>
+  </div>
+  <h1>Recovering EBS Snapshots with ColdSnap: A Real DR Story from the Field</h1>
+  <p class="sub">21 snapshots, ~5 TB of data, a degraded region, and every conventional recovery path failing one by one. Here's the tool that finally worked — and exactly how we used it.</p>
+  <div class="byline">
+    <div class="av">VR</div>
+    <div>
+      <div class="bn">Vishnu Rachapudi</div>
+      <div class="bro">Cloud &amp; AI Engineer &middot; AWS Community Builder (Security)</div>
+    </div>
+    <div class="bm"><div>April 2026</div><div>10 min read</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stats">
+    <div class="stat"><div class="sn">21</div><div class="sl">Snapshots Recovered</div></div>
+    <div class="stat"><div class="sn">~5TB</div><div class="sl">Total Data</div></div>
+    <div class="stat"><div class="sn">0</div><div class="sl">Volumes Created</div></div>
+    <div class="stat"><div class="sn">2h</div><div class="sl">Avg per 100GB</div></div>
+  </div>
+
+  <p>During a regional outage we tried snapshot copy — failed. Cross-region AMI copy — failed. VM Export — failed. Then we tried ColdSnap. It worked. This post covers both scenarios it solved: emergency snapshot recovery during an active outage, and exporting encrypted AMIs to on-premises when the conventional VM Export path was blocked.</p>
+
+  <div class="toc">
+    <div class="toct">In this post</div>
+    <ol>
+      <li><a href="#s1">The incident — what failed and why</a></li>
+      <li><a href="#s2">What ColdSnap is and how it works</a></li>
+      <li><a href="#s3">Setting up the recovery environment</a></li>
+      <li><a href="#s4">Downloading and uploading 21 snapshots</a></li>
+      <li><a href="#s5">VM export — bypassing the AWS managed key restriction</a></li>
+      <li><a href="#s6">Data validation, resilience, and lessons learned</a></li>
+    </ol>
+  </div>
+
+
+  <!-- ── SECTION 1 ── -->
+  <div class="sh" id="s1"><span class="pill">Section 01</span><div class="line"></div></div>
+  <h2>The Incident</h2>
+
+  <p>A production platform running across multiple EBS volumes — application data, database, analytics — snapshotted regularly into a single region. The region degraded. Volume creation from snapshots started hanging indefinitely. We had 21 snapshots and no reliable way to restore from them.</p>
+  <p>We tried the obvious paths in order: snapshot copy timed out, cross-region AMI copy failed, VM Export was blocked due to encryption. The AWS console was intermittently inaccessible. That's when we reached for ColdSnap.</p>
+
+  <div class="cmp">
+    <div class="cc">
+      <div class="ct">What failed</div>
+      <div class="ci2"><span class="cx">&#10007;</span> CreateVolume from snapshot — hanging</div>
+      <div class="ci2"><span class="cx">&#10007;</span> Cross-region snapshot copy — timed out</div>
+      <div class="ci2"><span class="cx">&#10007;</span> Cross-region AMI copy — failed</div>
+      <div class="ci2"><span class="cx">&#10007;</span> VM Export to S3 — blocked by KMS key type</div>
+    </div>
+    <div class="cc">
+      <div class="ct">Why ColdSnap worked</div>
+      <div class="ci2"><span class="ck">&#10003;</span> Uses EBS Direct APIs — different service path</div>
+      <div class="ci2"><span class="ck">&#10003;</span> No volume creation needed at all</div>
+      <div class="ci2"><span class="ck">&#10003;</span> Checkpoint/resume on failure</div>
+      <div class="ci2"><span class="ck">&#10003;</span> Works from any healthy region</div>
+    </div>
+  </div>
+
+  <div class="cal cal-i">
+    <p>EBS volume operations (CreateVolume, AttachVolume) and EBS Direct APIs (GetSnapshotBlock, ListSnapshotBlocks) are different internal service paths. When one degrades, the other often stays up. ColdSnap exclusively uses Direct APIs.</p>
+  </div>
+
+
+  <!-- ── SECTION 2 ── -->
+  <div class="sh" id="s2"><span class="pill">Section 02</span><div class="line"></div></div>
+  <h2>What is ColdSnap?</h2>
+
+  <p>ColdSnap is an open-source CLI tool from AWS Labs, written in Rust. It uses <strong style="color:#fff">EBS Direct APIs</strong> to read snapshot blocks directly and reconstruct them as a raw disk image on local disk — no volume, no attachment, no dependency on the EBS control plane.</p>
+
+  <div class="cal cal-i">
+    <p>🔗 <a href="https://github.com/awslabs/coldsnap">github.com/awslabs/coldsnap</a> — open source, AWS Labs maintained</p>
+  </div>
+
+  <div class="arch">
+    <div class="ar"><div class="ai" style="background:var(--orange-dim)">📋</div><div><div class="al">ListSnapshotBlocks</div><div class="as">Gets all block indices in the snapshot via EBS Direct API</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--blue-dim)">⚡</div><div><div class="al">GetSnapshotBlock (parallel)</div><div class="as">Downloads 512KB blocks in parallel — decrypts transparently regardless of KMS key</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--purple-dim)">💾</div><div><div class="al">Checkpoint written per block</div><div class="as">Progress saved locally — any failure resumes from last checkpoint, zero re-download</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--green-dim)">✓</div><div><div class="al">Raw .img reconstructed on disk</div><div class="as">Unencrypted disk image — mountable, uploadable, or convertible to VMDK</div></div></div>
+  </div>
+
+  <div class="ucg">
+    <div class="uc"><div class="ui">🔓</div><div class="ut">Decrypt KMS Snapshots</div><div class="ud">Output is always unencrypted raw data regardless of source key type.</div></div>
+    <div class="uc"><div class="ui">🖥️</div><div class="ut">VM Export / AMI Rebuild</div><div class="ud">Bypasses the AWS managed key restriction that blocks native VM Export.</div></div>
+    <div class="uc"><div class="ui">🌍</div><div class="ut">Cross-Region Recovery</div><div class="ud">Download locally, re-upload as new snapshot when copy APIs are unavailable.</div></div>
+  </div>
+
+
+  <!-- ── SECTION 3 ── -->
+  <div class="sh" id="s3"><span class="pill">Section 03</span><div class="line"></div></div>
+  <h2>Setting Up the Recovery Environment</h2>
+
+  <p>Launch an EC2 instance in a <strong style="color:#fff">healthy region</strong> with at least 2× the snapshot size in disk capacity. We used a 2TB gp3 root volume for ~5TB of snapshots processed in batches.</p>
+
+  <h3>Grow the partition and install ColdSnap</h3>
+
+<pre><code><span class="cm"># Grow partition to full EBS volume capacity</span>
+sudo yum install cloud-utils-growpart -y
+sudo growpart /dev/nvme0n1 1 && sudo xfs_growfs -d /
+mkdir /data
+
+<span class="cm"># Install Rust + build ColdSnap</span>
+sudo yum install git curl gcc make screen openssl-devel cmake -y
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source $HOME/.cargo/env
+cargo install --git https://github.com/awslabs/coldsnap --branch develop --locked
+
+<span class="cm"># Set source region</span>
+<span class="kw">export</span> AWS_REGION=<span class="str">"ap-south-1"</span></code></pre>
+
+  <h3>IAM policy — attach to EC2 role, no access keys</h3>
+
+  <div class="jb">
+    <div class="jbt"><span>📄</span> iam-policy.json</div>
+<pre><code>{
+  <span class="str">"Version"</span>: <span class="str">"2012-10-17"</span>,
+  <span class="str">"Statement"</span>: [{
+    <span class="str">"Effect"</span>: <span class="str">"Allow"</span>,
+    <span class="str">"Action"</span>: [
+      <span class="str">"ebs:List*"</span>, <span class="str">"ebs:Get*"</span>, <span class="str">"ebs:Start*"</span>,
+      <span class="str">"ebs:PutSnapshotBlock"</span>, <span class="str">"ebs:CompleteSnapshot"</span>
+    ],
+    <span class="str">"Resource"</span>: <span class="str">"*"</span>
+  }]
+}</code></pre>
+  </div>
+
+  <h3>Always use screen — downloads take hours</h3>
+
+<pre><code>screen -S coldsnap          <span class="cm"># create session</span>
+<span class="cm"># Ctrl+A then D             # detach, keep running</span>
+screen -ls                  <span class="cm"># list sessions</span>
+screen -r coldsnap          <span class="cm"># reconnect by name</span>
+screen -rd 41725            <span class="cm"># reconnect by ID</span></code></pre>
+
+
+  <!-- ── SECTION 4 ── -->
+  <div class="sh" id="s4"><span class="pill">Section 04</span><div class="line"></div></div>
+  <h2>Downloading and Uploading 21 Snapshots</h2>
+
+  <h3>The download command</h3>
+
+<pre><code>coldsnap download \
+  --checkpoint \
+  --keep-checkpoint \
+  --force \
+  snap-09eaa6e71a2896666 \
+  /data/app-data-vol3.img</code></pre>
+
+  <table>
+    <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ic">--checkpoint</span></td><td>Save progress block-by-block — resume from exact position on any failure</td></tr>
+      <tr><td><span class="ic">--keep-checkpoint</span></td><td>Retain checkpoint after completion for re-runs and verification</td></tr>
+      <tr><td><span class="ic">--force</span></td><td>Overwrite existing output file — clean resume without manual cleanup</td></tr>
+    </tbody>
+  </table>
+
+  <div class="ss">
+    <div class="ss-inner">
+      <div class="ss-bar">
+        <div class="ss-dot" style="background:#ff5f57"></div>
+        <div class="ss-dot" style="background:#febc2e"></div>
+        <div class="ss-dot" style="background:#28c840"></div>
+      </div>
+      <div class="ss-cmd">
+        root@ip-10-110-20-183:/data# coldsnap download --checkpoint --keep-checkpoint --force snap-08d24744706ef4847 /data/app-data-vol3.img<br>
+        &nbsp; Uploading [=&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] 1777/1048576 (2h)
+      </div>
+      <div class="ss-progress"><div class="ss-fill" style="width:2%"></div></div>
+    </div>
+    <div class="ic2">Download in progress — 1777/1048576 blocks · ~2h remaining for this 500GiB snapshot</div>
+  </div>
+
+  <h3>Handling failed blocks — just re-run</h3>
+  <p>This error appeared multiple times during peak degradation. It is transient, not data corruption. Re-running the same command resumes from checkpoint and retries only the failed blocks.</p>
+
+<pre><code><span class="var">Failed to download snapshot</span>: Failed to get <span class="var">166</span> blocks for snapshot
+<span class="str">'snap-08d24744706ef4847'</span>: blocks [<span class="var">3915</span>, <span class="var">6625</span>, <span class="var">21231</span>, <span class="var">21524</span>...]
+
+<span class="cm"># Fix: re-run the exact same command — checkpoint skips completed blocks</span>
+coldsnap download --checkpoint --keep-checkpoint --force \
+  snap-08d24744706ef4847 /data/app-data-vol3.img</code></pre>
+
+  <h3>Script for parallel downloads</h3>
+
+<pre><code><span class="cm">#!/bin/bash</span>
+SNAPSHOTS=(
+  <span class="str">"snap-09eaa6e71a2896666:app-data-vol3"</span>
+  <span class="str">"snap-0606fc81f5eca3697:db-main-vol3"</span>
+  <span class="cm"># ... all 21 snapshot IDs</span>
+)
+<span class="kw">for</span> entry <span class="kw">in</span> <span class="str">"${SNAPSHOTS[@]}"</span>; do
+  snap_id=<span class="str">"${entry%%:*}"</span> ; vol_name=<span class="str">"${entry##*:}"</span>
+  screen -dmS <span class="str">"dl-${vol_name}"</span> bash -c \
+    <span class="str">"coldsnap download --checkpoint --keep-checkpoint --force ${snap_id} /data/${vol_name}.img; exec bash"</span>
+done
+
+watch -n 1 df -h  <span class="cm"># monitor disk continuously</span></code></pre>
+
+  <h3>Upload to healthy region</h3>
+
+  <div class="ss">
+    <div class="ss-inner">
+      <div class="ss-bar">
+        <div class="ss-dot" style="background:#ff5f57"></div>
+        <div class="ss-dot" style="background:#febc2e"></div>
+        <div class="ss-dot" style="background:#28c840"></div>
+      </div>
+      <div class="ss-cmd">
+        root@ip-10-110-20-183:/data# coldsnap upload /data/app-data-vol3.img.partial<br>
+        &nbsp; Uploading [=&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] 1777/1048576 (2h)<br><br>
+        root@ip-10-110-20-183:/data# coldsnap upload /data/db-main-vol3.img.partial<br>
+        &nbsp; Uploading [=========&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] 97830/524288 (31m)
+      </div>
+      <div class="ss-progress"><div class="ss-fill" style="width:19%"></div></div>
+    </div>
+    <div class="ic2">Two parallel uploads — app-data-vol3 (500GiB) and db-main-vol3 (500GiB) in separate screen sessions</div>
+  </div>
+
+<pre><code><span class="kw">export</span> AWS_REGION=<span class="str">"eu-west-1"</span>  <span class="cm"># switch to target region</span>
+coldsnap upload /data/app-data-vol3.img
+<span class="cm"># Prints new snapshot ID on completion — log all 21</span></code></pre>
+
+
+  <!-- ── SECTION 5 ── -->
+  <div class="sh" id="s5"><span class="pill">Section 05</span><div class="line"></div></div>
+  <h2>VM Export — Bypassing the AWS Managed Key Restriction</h2>
+
+  <p>A separate but related scenario: a customer needed to move <strong style="color:#fff">3 VMs (2 snapshots each) from AWS to on-premises</strong> as local DR copies. AWS VM Export was the obvious path — export AMI to S3 as VMDK, download, done.</p>
+  <p>It kept failing. Root cause: the AMIs were encrypted with the <strong style="color:#fff">AWS managed EBS key</strong> (<span class="ic">aws/ebs</span>). VM Export only supports customer-managed KMS keys. We raised a support ticket — AWS confirmed it and suggested manually re-encrypting every snapshot with a CMK first. We used ColdSnap instead.</p>
+
+  <div class="cal cal-i">
+    <p>💡 ColdSnap downloads raw decrypted blocks regardless of what KMS key the source was encrypted with. The <span class="ic">.img</span> output is always unencrypted on disk. Upload it back with <span class="ic">--kms-key-id</span> to re-encrypt with a CMK — then VM Export works.</p>
+  </div>
+
+  <h3>The full flow — 3 VMs, 6 snapshots, on-premises delivery</h3>
+
+  <div class="arch">
+    <div class="ar"><div class="ai" style="background:var(--orange-dim)">🔐</div><div><div class="al">6 snapshots encrypted with aws/ebs key</div><div class="as">VM Export blocked · ColdSnap download proceeds without issue</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--blue-dim)">⬇️</div><div><div class="al">coldsnap download → 6 raw .img files</div><div class="as">Script loops all 6 · Decrypted transparently · Unencrypted output on disk</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--purple-dim)">⬆️</div><div><div class="al">coldsnap upload --kms-key-id → 6 new CMK snapshots</div><div class="as">Re-encrypted with customer-managed key · Tagged per VM</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--orange-dim)">🖼️</div><div><div class="al">Reconstruct AMIs from new CMK snapshots</div><div class="as">Register root snapshot as AMI · Attach data volumes</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--blue-dim)">📦</div><div><div class="al">AWS VM Export → S3 as VMDK</div><div class="as">Now works — CMK-encrypted source is supported</div></div></div>
+    <div class="aa">↓</div>
+    <div class="ar"><div class="ai" style="background:var(--green-dim)">✓</div><div><div class="al">Customer downloads VMDK from S3 to on-premises</div><div class="as">Restores directly on local hypervisor</div></div></div>
+  </div>
+
+  <h3>Upload options reference</h3>
+
+<pre><code><span class="cm"># Re-encrypt with CMK on upload</span>
+coldsnap upload disk.img \
+  --kms-key-id arn:aws:kms:ap-south-1:380459294095:key/1a2b3c4d-5e6f-1a2b-3c4d-5e6f1a2b3c4d
+
+<span class="cm"># Tag at upload time — no separate API call needed</span>
+coldsnap upload disk.img \
+  --tag <span class="str">"Key=VM,Value=vm1"</span> \
+  --tag <span class="str">"Key=Volume,Value=root"</span>
+
+<span class="cm"># Skip zero blocks — smaller upload, but avoid for encrypted targets</span>
+coldsnap upload disk.img --omit-zero-blocks</code></pre>
+
+  <div class="cal cal-w">
+    <p>⚠️ Avoid <span class="ic">--omit-zero-blocks</span> when the target snapshot will be encrypted. Apps that write zeroes expect to read them back — missing zero blocks cause unexpected read behaviour.</p>
+  </div>
+
+  <h3>The Windows instance quirk</h3>
+  <p>Both scenarios shared this gotcha: when you spin up an instance from a ColdSnap-recovered volume, AWS defaults the platform to <strong style="color:#fff">Linux</strong> in the console — even if the disk is Windows. SSM connects and you see a bash prompt, but you're actually in PowerShell.</p>
+  <p>Workaround: launch a fresh Windows instance from an official AWS Windows AMI → stop it → detach its root volume → attach your recovered volume in its place → start. AWS retains the Windows platform metadata and everything behaves correctly.</p>
+
+
+  <div class="sh" id="s6"><span class="pill">Section 06</span><div class="line"></div></div>
+  <h2>Data Validation, Resilience, and Lessons</h2>
+
+  <h3>Understanding the checkpoint files</h3>
+
+  <p>When you run ColdSnap with <span class="ic">--checkpoint</span>, it creates two files alongside your download — not just the final <span class="ic">.img</span>. Knowing what each file means tells you immediately whether the download is complete or not.</p>
+
+<pre><code>-rw-r--r-- 1 root root      32437471 Apr 11 03:52 app-data-vol3.img.coldsnap-progress
+-rw-r--r-- 1 root root 2199023255552 Apr 11 03:52 app-data-vol3.img.partial</code></pre>
+
+  <table>
+    <thead><tr><th>File</th><th>What it means</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="ic">app-data-vol3.img.partial</span></td>
+        <td>Download is <strong style="color:#e3b341">still in progress or was interrupted</strong>. Some blocks are missing. The file exists as a partial write — do not use as-is.</td>
+        <td>Re-run the same download command. ColdSnap resumes from checkpoint.</td>
+      </tr>
+      <tr>
+        <td><span class="ic">app-data-vol3.img.coldsnap-progress</span></td>
+        <td>The checkpoint index file. Records which blocks have been successfully written. Used by ColdSnap on resume to skip completed blocks.</td>
+        <td>Do not delete while download is running. Safe to inspect — it's a binary index.</td>
+      </tr>
+      <tr>
+        <td><span class="ic">app-data-vol3.img</span></td>
+        <td>Download <strong style="color:var(--green)">completed successfully</strong>. All blocks written. The <span class="ic">.partial</span> file is renamed to the final output name.</td>
+        <td>Proceed to validation. Still not production-ready without verification.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="cal cal-w">
+    <p>⚠️ If you see <span class="ic">.img.partial</span> — there are missing blocks. Do not mount, upload, or restore from a <span class="ic">.partial</span> file. Re-run the download command first. The checkpoint will handle the rest.</p>
+  </div>
+
+  <h3>Tracking progress with the .coldsnap-progress file</h3>
+
+  <p>The <span class="ic">.coldsnap-progress</span> file also lets you track how many blocks have been downloaded so far during a running download. You can monitor it alongside <span class="ic">df -h</span> to understand both how far along you are and how much disk space is being consumed.</p>
+
+<pre><code><span class="cm"># Check how many blocks have been recorded in the progress file</span>
+wc -c app-data-vol3.img.coldsnap-progress
+
+<span class="cm"># Watch file size growing (confirms blocks are being written)</span>
+watch -n 5 'ls -lh /data/*.partial /data/*.img 2>/dev/null'</code></pre>
+
+  <p>This is how the block-level copy actually works: ColdSnap writes 512KB blocks one by one, recording each in the progress file. The <span class="ic">.partial</span> file grows as blocks land on disk. When all blocks are accounted for, the rename happens and you get a clean <span class="ic">.img</span>.</p>
+
+  <h3>Why a completed .img still needs validation</h3>
+
+  <p>A clean <span class="ic">.img</span> file — no <span class="ic">.partial</span>, no missing blocks — is not the same as a verified complete copy. During an active outage, some blocks may have been retried multiple times before succeeding. We cannot tell you exactly what was in the blocks that failed initially. In most cases the data is intact. But for critical workloads you need to verify before restoring.</p>
+
+  <div class="cal cal-w">
+    <p>⚠️ Never treat a ColdSnap-recovered <span class="ic">.img</span> as production-ready without validation — even if the filename shows no <span class="ic">.partial</span>. This is especially critical for databases and transactional systems.</p>
+  </div>
+
+  <div class="hbox">
+    <div class="hbox-title">The bottom line</div>
+    <p style="margin:0;font-size:14px;">ColdSnap is a last resort that genuinely works when everything else fails. We tried snapshot copy, cross-region AMI copy, and VM Export before landing here — all three failed. ColdSnap succeeded, but at scale (~5TB, 21 snapshots) it took significant time and required multiple resumes per snapshot. Add it to your DR runbook before you need it. Know it's slow. Check your <span class="ic">.partial</span> files. Validate everything it produces.</p>
+  </div>
+
+  <h3>References</h3>
+  <p>
+    ColdSnap GitHub — <a href="https://github.com/awslabs/coldsnap">https://github.com/awslabs/coldsnap</a><br>
+    AWS EBS Direct APIs — <a href="https://docs.aws.amazon.com/ebs/latest/userguide/ebs-accessing-snapshot.html">https://docs.aws.amazon.com/ebs/latest/userguide/ebs-accessing-snapshot.html</a><br>
+    AWS EBS Snapshots — <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html</a>
+  </p>
+
+</div>
+</body>
+</html>
