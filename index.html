@@ -12,7 +12,7 @@
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <link rel="canonical" href="https://www.vishnurachapudi.com/" />
 
-  <!-- ═══ OPEN GRAPH (Facebook / LinkedIn) ═══ -->
+  <!-- ═══ OPEN GRAPH ═══ -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.vishnurachapudi.com/" />
   <meta property="og:title" content="Vishnu Rachapudi — 14x AWS Certified Cloud & AI Engineer" />
@@ -66,7 +66,6 @@
   }
   </script>
 
-  <!-- ═══ STRUCTURED DATA — WebSite (Sitelinks search) ═══ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -82,7 +81,6 @@
   }
   </script>
 
-  <!-- ═══ STRUCTURED DATA — BreadcrumbList ═══ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -95,7 +93,6 @@
   }
   </script>
 
-  <!-- ═══ STRUCTURED DATA — FAQPage (boosts rich snippets) ═══ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -120,13 +117,12 @@
   }
   </script>
 
-  <!-- ═══ STRUCTURED DATA — ProfilePage ═══ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
     "dateCreated": "2023-03-01",
-    "dateModified": "2026-03-01",
+    "dateModified": "2026-04-01",
     "mainEntity": {
       "@type": "Person",
       "name": "Vishnu Rachapudi",
@@ -134,7 +130,7 @@
       "description": "14x AWS Certified Cloud & AI Engineer, AWS Community Builder (Security), international speaker, and author of 50+ technical articles on AWS, Gen AI, and cloud security.",
       "interactionStatistic": [
         { "@type": "InteractionCounter", "interactionType": "https://schema.org/WriteAction", "userInteractionCount": 50 },
-        { "@type": "InteractionCounter", "interactionType": "https://schema.org/SpeakableSpecification", "userInteractionCount": 6 }
+        { "@type": "InteractionCounter", "interactionType": "https://schema.org/SpeakableSpecification", "userInteractionCount": 8 }
       ]
     }
   }
@@ -455,49 +451,203 @@
       vertical-align: middle;
     }
 
-    /* ── GALLERY PREVIEW ── */
-    .gallery-preview-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto auto;
-      gap: 10px;
+    /* ══════════════════════════════
+       GALLERY CAROUSEL
+    ══════════════════════════════ */
+
+    /* ── CATEGORY TABS ── */
+    .gallery-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
-    .gp-item {
-      border-radius: var(--r);
-      overflow: hidden;
-      position: relative;
-      background: var(--bg2);
-      border: 0.5px solid var(--border);
+    .gallery-tab {
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.9rem;
+      border-radius: 99px;
+      border: 0.5px solid var(--border2);
+      background: transparent;
+      color: var(--muted);
       cursor: pointer;
+      transition: all 0.2s;
     }
-    .gp-item.featured {
-      grid-row: 1 / 3;
+    .gallery-tab:hover { color: var(--text); border-color: var(--muted); }
+    .gallery-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      font-weight: 600;
     }
-    .gp-item img {
+
+    /* ── CAROUSEL WRAPPER ── */
+    .carousel-outer {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 0.5px solid var(--border);
+      background: var(--bg2);
+      user-select: none;
+    }
+
+    /* Main big image */
+    .carousel-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #000;
+    }
+    .carousel-stage img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
+      transform: scale(1.03);
+    }
+    .carousel-stage img.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Caption overlay */
+    .carousel-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 2rem 1.75rem 1.4rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 1rem;
+    }
+    .caption-text {}
+    .caption-tag {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.3rem;
+    }
+    .caption-title {
+      font-family: var(--ff-head);
+      font-size: clamp(0.95rem, 2vw, 1.25rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .caption-meta {
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 0.2rem;
+    }
+    .caption-counter {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      align-self: flex-end;
+    }
+
+    /* Nav arrows */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: rgba(8,9,10,0.7);
+      border: 0.5px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+    .carousel-btn:hover { background: rgba(249,115,22,0.8); border-color: var(--accent); }
+    .carousel-prev { left: 1rem; }
+    .carousel-next { right: 1rem; }
+
+    /* Expand / fullscreen btn */
+    .carousel-expand {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: rgba(8,9,10,0.6);
+      border: 0.5px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s;
+    }
+    .carousel-expand:hover { background: rgba(249,115,22,0.8); color: #fff; }
+
+    /* Thumbnail strip */
+    .carousel-thumbs {
+      display: flex;
+      gap: 6px;
+      padding: 0.75rem;
+      background: var(--bg3);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .carousel-thumbs::-webkit-scrollbar { display: none; }
+    .carousel-thumb {
+      flex-shrink: 0;
+      width: 72px; height: 52px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s, opacity 0.2s;
+      opacity: 0.55;
+    }
+    .carousel-thumb img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s ease;
     }
-    .gp-item:hover img { transform: scale(1.05); }
-    .gp-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity 0.25s;
-      display: flex; align-items: flex-end;
-      padding: 0.85rem 1rem;
+    .carousel-thumb.active {
+      border-color: var(--accent);
+      opacity: 1;
     }
-    .gp-item:hover .gp-overlay { opacity: 1; }
-    .gp-caption { font-family: var(--ff-head); font-size: 0.78rem; font-weight: 600; color: #fff; line-height: 1.3; }
-    .gp-tag {
-      position: absolute; top: 0.5rem; left: 0.5rem;
-      padding: 0.15rem 0.5rem;
-      background: rgba(249,115,22,0.85);
+    .carousel-thumb:hover { opacity: 0.85; }
+
+    /* Progress dots */
+    .carousel-dots {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg3);
+      justify-content: center;
+      border-top: 0.5px solid var(--border);
+    }
+    .carousel-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border2);
+      cursor: pointer;
+      transition: background 0.2s, width 0.25s;
+    }
+    .carousel-dot.active {
+      background: var(--accent);
+      width: 18px;
       border-radius: 99px;
-      font-family: var(--ff-mono); font-size: 0.62rem;
-      color: #fff; letter-spacing: 0.04em;
     }
+
+    /* Gallery CTA row */
     .gallery-cta-row {
       display: flex; align-items: center; justify-content: space-between;
       margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;
@@ -507,7 +657,7 @@
     /* ── LIGHTBOX ── */
     .lightbox {
       display: none; position: fixed; inset: 0; z-index: 999;
-      background: rgba(0,0,0,0.93);
+      background: rgba(0,0,0,0.95);
       align-items: center; justify-content: center;
       padding: 2rem;
     }
@@ -573,65 +723,52 @@
       .talk-row { grid-template-columns: 1fr; gap: 0.5rem; }
       .tl-item { grid-template-columns: 1fr; gap: 0.25rem; }
       .nav-links { display: none; }
-      .gallery-preview-grid { grid-template-columns: 1fr 1fr; }
-      .gp-item.featured { grid-row: auto; }
+      .carousel-stage { aspect-ratio: 4/5; }
+      .carousel-thumb { width: 56px; height: 42px; }
     }
 
-
     /* ── LIGHT THEME OVERRIDES ── */
-body.light {
-  --bg: #f5f4f0;
-  --bg2: #eeecea;
-  --bg3: #e5e3de;
-  --surface: #dddbd6;
-  --border: rgba(0,0,0,0.09);
-  --border2: rgba(0,0,0,0.18);
-  --text: #1a1917;
-  --muted: #6b6863;
-  --link: #1d6fb8;
-  --accent: #e8650a;
-  --accent2: #f97316;
-}
+    body.light {
+      --bg: #f5f4f0;
+      --bg2: #eeecea;
+      --bg3: #e5e3de;
+      --surface: #dddbd6;
+      --border: rgba(0,0,0,0.09);
+      --border2: rgba(0,0,0,0.18);
+      --text: #1a1917;
+      --muted: #6b6863;
+      --link: #1d6fb8;
+      --accent: #e8650a;
+      --accent2: #f97316;
+    }
+    body.light nav { background: rgba(245,244,240,0.88); }
+    body.light .stat,
+    body.light .cert-chip,
+    body.light .blog-card,
+    body.light .award-card,
+    body.light .talk-row,
+    body.light .media-card { background: #eeecea; }
+    body.light .hero-avatar { box-shadow: 0 0 0 8px rgba(232,101,10,0.1); }
+    body.light .carousel-stage img { filter: brightness(0.97); }
 
-body.light nav {
-  background: rgba(245,244,240,0.88);
-}
+    /* ── TOGGLE BUTTON ── */
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 0.5px solid var(--border2);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: rotate(20deg); }
 
-body.light .stat,
-body.light .cert-chip,
-body.light .blog-card,
-body.light .award-card,
-body.light .talk-row,
-body.light .media-card {
-  background: #eeecea;
-}
-
-body.light .hero-avatar {
-  box-shadow: 0 0 0 8px rgba(232,101,10,0.1);
-}
-
-/* ── TOGGLE BUTTON ── */
-.theme-toggle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 0.5px solid var(--border2);
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
-  flex-shrink: 0;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: rotate(20deg);
-}
+    @media (max-width: 700px) {
+      .about-grid { grid-template-columns: 1fr !important; }
+    }
   </style>
 </head>
 
@@ -641,10 +778,9 @@ body.light .hero-avatar {
 <nav role="navigation" aria-label="Main navigation">
   <a class="nav-logo" href="#hero">vishnu<span>.</span></a>
   <ul class="nav-links">
-    <!-- THEME TOGGLE BUTTON — paste inside <nav>, after <ul class="nav-links"> -->
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
-  <span class="toggle-icon" id="toggleIcon">☀</span>
-</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+      <span class="toggle-icon" id="toggleIcon">☀</span>
+    </button>
     <li><a href="#about">about</a></li>
     <li><a href="#certifications">certs</a></li>
     <li><a href="#talks">talks</a></li>
@@ -669,13 +805,13 @@ body.light .hero-avatar {
           I build, break, write, and speak — all about cloud.
         </p>
         <div class="btn-row">
-          <a class="btn btn-primary" href="https://www.linkedin.com/in/vishnu-rachapudi-28956920b/" rel="noopener noreferrer" target="_blank" aria-label="Connect with Vishnu on LinkedIn">Connect on LinkedIn</a>
-          <a class="btn btn-ghost" href="https://dev.to/vishnu_rachapudi_75e73248" rel="noopener noreferrer" target="_blank" aria-label="Read Vishnu's blog on Dev.to">Read the Blog</a>
+          <a class="btn btn-primary" href="https://www.linkedin.com/in/vishnu-rachapudi-28956920b/" rel="noopener noreferrer" target="_blank">Connect on LinkedIn</a>
+          <a class="btn btn-ghost" href="https://dev.to/vishnu_rachapudi_75e73248" rel="noopener noreferrer" target="_blank">Read the Blog</a>
         </div>
         <div class="stats-row" role="list" aria-label="Career highlights">
           <div class="stat" role="listitem"><div class="stat-num">14</div><div class="stat-label">AWS Certs</div></div>
           <div class="stat" role="listitem"><div class="stat-num">20</div><div class="stat-label">Total Certs</div></div>
-          <div class="stat" role="listitem"><div class="stat-num">6+</div><div class="stat-label">Talks Given</div></div>
+          <div class="stat" role="listitem"><div class="stat-num">8+</div><div class="stat-label">Talks Given</div></div>
           <div class="stat" role="listitem"><div class="stat-num">50+</div><div class="stat-label">Blog Posts</div></div>
         </div>
       </div>
@@ -732,7 +868,6 @@ body.light .hero-avatar {
   <div class="wrap">
     <div class="sec-label">Credentials</div>
     <h2 id="cert-heading"><em>Certifications</em></h2>
-
     <p style="color:var(--muted);margin-bottom:2rem;font-size:0.9rem;">20 professional certifications across AWS, HashiCorp, Fortinet &amp; Oracle Cloud</p>
 
     <h3 style="font-family:var(--ff-mono);font-size:0.8rem;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem;font-weight:400;">AWS — 14 Certifications</h3>
@@ -777,7 +912,7 @@ body.light .hero-avatar {
       </div>
     </div>
     <div style="margin-top:1.5rem;">
-      <a href="https://www.credly.com/users/venkata-pavan-vishnu-rachapudi" class="btn btn-ghost" rel="noopener noreferrer" target="_blank" aria-label="View all certifications on Credly">View all on Credly →</a>
+      <a href="https://www.credly.com/users/venkata-pavan-vishnu-rachapudi" class="btn btn-ghost" rel="noopener noreferrer" target="_blank">View all on Credly →</a>
     </div>
   </div>
 </section>
@@ -789,82 +924,80 @@ body.light .hero-avatar {
     <h2 id="talks-heading">On <em>Stage</em></h2>
     <div class="talks-list" role="list" aria-label="Speaking engagements">
 
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-        <div class="talk-date" itemprop="startDate" content="2025-10-01">Oct 2025</div>
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Oct 2025</div>
         <div>
-          <div class="talk-title" itemprop="name">AWS Community Day UAE 2025</div>
-          <div class="talk-event" itemprop="description">Revolutionizing Enterprise Productivity with Family of Qs</div>
+          <div class="talk-title">AWS Community Day UAE 2025</div>
+          <div class="talk-event">Revolutionizing Enterprise Productivity with Family of Qs</div>
         </div>
-        <div class="talk-loc" itemprop="location">Dubai, UAE</div>
+        <div class="talk-loc">Dubai, UAE</div>
       </article>
 
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-        <div class="talk-date" itemprop="startDate" content="2025-10-14">Oct 2025</div>
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Oct 2025</div>
         <div>
-          <div class="talk-title" itemprop="name">GITEX GLOBAL 2025</div>
-          <div class="talk-event" itemprop="description">Q for the Future — Enterprise Productivity with Family of Qs</div>
+          <div class="talk-title">GITEX GLOBAL 2025</div>
+          <div class="talk-event">Q for the Future — Enterprise Productivity with Family of Qs</div>
         </div>
-        <div class="talk-loc" itemprop="location">Dubai, UAE</div>
+        <div class="talk-loc">Dubai, UAE</div>
       </article>
 
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-        <div class="talk-date" itemprop="startDate" content="2025-12-01">Dec 2025</div>
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Dec 2025</div>
         <div>
-          <div class="talk-title" itemprop="name">AWS Community Day Kochi (AI/ML)</div>
-          <div class="talk-event" itemprop="description">Amazon QuickSuite &amp; Agentic AI</div>
+          <div class="talk-title">AWS Community Day Kochi (AI/ML)</div>
+          <div class="talk-event">Amazon QuickSuite &amp; Agentic AI</div>
         </div>
-        <div class="talk-loc" itemprop="location">Kochi, India</div>
+        <div class="talk-loc">Kochi, India</div>
       </article>
 
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-        <div class="talk-date" itemprop="startDate" content="2025-12-15">Dec 2025</div>
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Dec 2025</div>
         <div>
-          <div class="talk-title" itemprop="name">AWS Student Community Day MLRIT</div>
-          <div class="talk-event" itemprop="description">Develop &amp; Deploy using Kiro &amp; App Runner</div>
+          <div class="talk-title">AWS Student Community Day MLRIT</div>
+          <div class="talk-event">Develop &amp; Deploy using Kiro &amp; App Runner</div>
         </div>
-        <div class="talk-loc" itemprop="location">Hyderabad, India</div>
+        <div class="talk-loc">Hyderabad, India</div>
       </article>
 
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-        <div class="talk-date" itemprop="startDate" content="2026-02-01">Feb 2026</div>
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Feb 2026</div>
         <div>
-          <div class="talk-title" itemprop="name">AWS User Group Hyderabad</div>
-          <div class="talk-event" itemprop="description">Agentic AI on AWS — from SDK to Runtime</div>
+          <div class="talk-title">AWS User Group Hyderabad</div>
+          <div class="talk-event">Agentic AI on AWS — from SDK to Runtime</div>
         </div>
-        <div class="talk-loc" itemprop="location">Hyderabad, India</div>
+        <div class="talk-loc">Hyderabad, India</div>
       </article>
 
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-        <div class="talk-date" itemprop="startDate" content="2026-03-01">Mar 2026</div>
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Mar 2026</div>
         <div>
-          <div class="talk-title" itemprop="name">AWS User Group Punjab</div>
-          <div class="talk-event" itemprop="description">AWS Certified AI Practitioner — Roadmap Session</div>
+          <div class="talk-title">AWS User Group Punjab</div>
+          <div class="talk-event">AWS Certified AI Practitioner — Roadmap Session</div>
         </div>
-        <div class="talk-loc" itemprop="location">Online</div>
+        <div class="talk-loc">Online</div>
       </article>
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event">
-         <div class="talk-date" itemprop="startDate" content="2026-04-11">Apr 2026</div>
-        <div>                                                                         
-          <div class="talk-title" itemprop="name">AWSCC Techno India University — Cloud Quest</div>
-          <div class="talk-event" itemprop="description">Navigating the AWS Ecosystem — Core Services, Global Infrastructure &amp; Management Console</div>
-        </div>
-            <div class="talk-loc" itemprop="location">Online</div>
-        </article>
 
-      <!-- UPCOMING -->
-      <article class="talk-row" role="listitem" itemscope itemtype="https://schema.org/Event"
-               style="border-left:2px solid var(--accent);background:rgba(249,115,22,0.04);">
+      <article class="talk-row" role="listitem">
+        <div class="talk-date">Apr 2026</div>
+        <div>
+          <div class="talk-title">AWSCC Techno India University — Cloud Quest</div>
+          <div class="talk-event">Navigating the AWS Ecosystem — Core Services, Global Infrastructure &amp; Management Console</div>
+        </div>
+        <div class="talk-loc">Online</div>
+      </article>
+
+      <article class="talk-row" role="listitem" style="border-left:2px solid var(--accent);background:rgba(249,115,22,0.04);">
         <div class="talk-date">
           <div style="font-family:var(--ff-mono);font-size:0.75rem;color:var(--muted);">Apr 2026</div>
           <div style="font-family:var(--ff-mono);font-size:0.62rem;color:var(--accent);letter-spacing:0.06em;text-transform:uppercase;margin-top:0.2rem;">Upcoming</div>
         </div>
         <div>
-          <div class="talk-title" itemprop="name">AWS Summit Bengaluru 2026 — Developer Community Theatre</div>
-          <div class="talk-event" itemprop="description">Keeping Serverless Modern: Upgrading AWS Lambda Runtimes with AWS Transform</div>
+          <div class="talk-title">AWS Summit Bengaluru 2026 — Developer Community Theatre</div>
+          <div class="talk-event">Keeping Serverless Modern: Upgrading AWS Lambda Runtimes with AWS Transform</div>
           <div style="font-family:var(--ff-mono);font-size:0.7rem;color:var(--muted);margin-top:0.3rem;">23 Apr · 15 min session · Developer Lounge</div>
         </div>
-        <div class="talk-loc" itemprop="location" style="background:rgba(249,115,22,0.15);color:var(--accent);">Bengaluru, India</div>
-        <meta itemprop="startDate" content="2026-04-23" />
+        <div class="talk-loc" style="background:rgba(249,115,22,0.15);color:var(--accent);">Bengaluru, India</div>
       </article>
 
     </div>
@@ -875,150 +1008,47 @@ body.light .hero-avatar {
 <section id="gallery" aria-labelledby="gallery-heading"
          itemscope itemtype="https://schema.org/ImageGallery">
   <meta itemprop="name" content="Vishnu Rachapudi — Speaker Gallery" />
-  <meta itemprop="description" content="Photos from AWS Community Day UAE, GITEX Global, Kochi AI/ML, MLRIT, and mentoring sessions." />
+  <meta itemprop="description" content="Photos from AWS Summit Bengaluru, AWS Community Day UAE, GITEX Global, Kochi AI/ML, MLRIT, and more." />
   <div class="wrap">
     <div class="sec-label">Speaker Gallery</div>
     <h2 id="gallery-heading">Speaker <em>Moments</em></h2>
 
-    <div class="gallery-preview-grid" role="list" aria-label="Speaker photo gallery preview">
-
-      <!-- Featured: tall left image -->
-      <figure class="gp-item featured" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-12.webp"
-              data-title="AWS Community Day UAE 2025" data-meta="Dubai, UAE · October 2025"
-              tabindex="0" aria-label="On stage at AWS Community Day UAE 2025 — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <span class="gp-tag">International</span>
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-12.webp"
-          alt="Vishnu Rachapudi on stage at AWS Community Day UAE 2025 in Dubai, presenting Enterprise Productivity with Family of Qs"
-          width="600" height="800"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">AWS Community Day UAE 2025<br><span style="font-weight:400;opacity:0.7;font-size:0.7rem;">Dubai · Oct 2025</span></div></div>
-        <meta itemprop="name" content="Vishnu Rachapudi on stage at AWS Community Day UAE 2025" />
-        <meta itemprop="datePublished" content="2025-10-01" />
-      </figure>
-
-      <!-- Row 1, col 2 -->
-      <figure class="gp-item" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-2.png"
-              data-title="GITEX Global 2025" data-meta="Dubai, UAE · October 2025"
-              tabindex="0" aria-label="GITEX Global 2025 — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <span class="gp-tag">GITEX</span>
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-2.png"
-          alt="Vishnu Rachapudi presenting Family of Qs at GITEX Global 2025 Dubai"
-          width="600" height="400"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">GITEX Global 2025</div></div>
-        <meta itemprop="name" content="Vishnu Rachapudi at GITEX Global 2025" />
-        <meta itemprop="datePublished" content="2025-10-14" />
-      </figure>
-
-      <!-- Row 1, col 3 -->
-      <figure class="gp-item" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-11.png"
-              data-title="Golden Jacket Crew — GITEX" data-meta="GITEX Global 2025, Dubai"
-              tabindex="0" aria-label="AWS Golden Jacket crew — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <span class="gp-tag">Golden Jacket</span>
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-11.png"
-          alt="Vishnu Rachapudi with the AWS Golden Jacket holders crew at GITEX Global 2025"
-          width="600" height="400"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">Golden Jacket Crew</div></div>
-        <meta itemprop="name" content="AWS Golden Jacket crew at GITEX 2025" />
-      </figure>
-
-      <!-- Row 2, col 2 -->
-      <figure class="gp-item" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-1.png"
-              data-title="AWS Community Day Kochi — On Stage" data-meta="Kochi, India · December 2025"
-              tabindex="0" aria-label="AWS Community Day Kochi — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-1.png"
-          alt="Vishnu Rachapudi on stage at AWS Community Day Kochi AI/ML Edition"
-          width="600" height="400"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">AWS Community Day Kochi</div></div>
-        <meta itemprop="name" content="On stage at AWS Community Day Kochi AI/ML" />
-        <meta itemprop="datePublished" content="2025-12-01" />
-      </figure>
-
-      <!-- Row 2, col 3 -->
-      <figure class="gp-item" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-7.png"
-              data-title="Enterprise Agentic AI Panel — AWS × SUDO × IDC" data-meta="Dubai, UAE"
-              tabindex="0" aria-label="Agentic AI panel discussion — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <span class="gp-tag">Panel</span>
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-7.png"
-          alt="Vishnu Rachapudi at an Enterprise Agentic AI panel with AWS, SUDO Consultants, and IDC"
-          width="600" height="400"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">Agentic AI — AWS × SUDO × IDC</div></div>
-        <meta itemprop="name" content="Enterprise Agentic AI panel — AWS × SUDO × IDC" />
-      </figure>
-
+    <!-- Category filter tabs -->
+    <div class="gallery-tabs" role="tablist" aria-label="Filter gallery by event">
+      <button class="gallery-tab active" data-filter="all" role="tab">All Photos</button>
+      <button class="gallery-tab" data-filter="blr" role="tab">AWS Summit Bengaluru 2026</button>
+      <button class="gallery-tab" data-filter="intl" role="tab">International</button>
+      <button class="gallery-tab" data-filter="india" role="tab">India</button>
     </div>
 
+    <!-- Carousel -->
+    <div class="carousel-outer" id="galleryCarousel" aria-label="Photo gallery carousel">
 
-    <!-- gallery-13: AWS Cloud Club TIU -->
-      <figure class="gp-item" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-13.jpg"
-              data-title="AWS Cloud Club TIU — Navigating the AWS Ecosystem"
-              data-meta="Online · April 2025"
-              tabindex="0"
-              aria-label="AWS Cloud Club TIU session — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <span class="gp-tag">Cloud Club</span>
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-13.jpg"
-          alt="Vishnu Rachapudi speaking at AWS Cloud Club TIU online session on Navigating the AWS Ecosystem, April 2026"
-          width="600" height="400"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">AWS Cloud Club TIU<br><span style="font-weight:400;opacity:0.7;font-size:0.7rem;">Online · Apr 2026</span></div></div>
-        <meta itemprop="name" content="Vishnu Rachapudi at AWS Cloud Club TIU — Navigating the AWS Ecosystem" />
-      </figure>
+      <!-- Stage -->
+      <div class="carousel-stage" id="carouselStage" aria-live="polite">
+        <!-- images injected by JS -->
+      </div>
 
-      <!-- gallery-14: AWS Cloud Club TIU -->
-      <figure class="gp-item" role="listitem"
-              data-src="https://www.vishnurachapudi.com/gallery/gallery-14.jpg"
-              data-title="AWS Cloud Club TIU — Navigating the AWS Ecosystem"
-              data-meta="Online · April 2025"
-              tabindex="0"
-              aria-label="AWS Cloud Club TIU session slide view — click to enlarge"
-              itemscope itemtype="https://schema.org/ImageObject" itemprop="image">
-        <span class="gp-tag">Cloud Club</span>
-        <img
-          src="https://www.vishnurachapudi.com/gallery/gallery-14.jpg"
-          alt="Vishnu Rachapudi presenting Navigating the AWS Ecosystem at AWS Cloud Club TIU online event, April 11 2026"
-          width="600" height="400"
-          loading="lazy"
-          itemprop="contentUrl"
-        />
-        <div class="gp-overlay"><div class="gp-caption">AWS Cloud Club TIU<br><span style="font-weight:400;opacity:0.7;font-size:0.7rem;">Online · Apr 2026</span></div></div>
-        <meta itemprop="name" content="Vishnu Rachapudi presenting at AWS Cloud Club TIU — Navigating the AWS Ecosystem" />
-      </figure>
+      <!-- Expand button -->
+      <button class="carousel-expand" id="carouselExpand" aria-label="View full size">⛶</button>
+
+      <!-- Prev / Next -->
+      <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Previous photo">‹</button>
+      <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Next photo">›</button>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="carousel-thumbs" id="carouselThumbs" role="list" aria-label="Photo thumbnails">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- Dots -->
+    <div class="carousel-dots" id="carouselDots" role="list" aria-label="Photo navigation dots">
+      <!-- injected by JS -->
+    </div>
 
     <div class="gallery-cta-row">
-      <p class="gallery-cta-text">14 photos · AWS Community Days · GITEX · Cloud Club · Mentoring · Panels</p>
+      <p class="gallery-cta-text" id="galleryCount">18 photos · AWS Summit · GITEX · Community Days · Panels</p>
       <a class="btn btn-ghost" href="https://www.vishnurachapudi.com/gallery/" aria-label="View full speaker gallery">View full gallery →</a>
     </div>
   </div>
@@ -1042,140 +1072,58 @@ body.light .hero-avatar {
     <div class="sec-label">VishTalks</div>
     <h2 id="media-heading">Watch &amp; <em>Listen</em></h2>
 
-    <div class="talks-media-grid" role="list" aria-label="Video talks and podcast episodes"
-         itemscope itemtype="https://schema.org/ItemList">
-      <meta itemprop="name" content="Vishnu Rachapudi — Talks, Videos &amp; Podcast Episodes" />
+    <div class="talks-media-grid" role="list" aria-label="Video talks and podcast episodes">
 
-      <!-- AWS Certified AI Practitioner Roadmap (Live) -->
-      <div class="media-card" role="listitem"
-           itemscope itemtype="https://schema.org/VideoObject" itemprop="itemListElement">
+      <div class="media-card" role="listitem">
         <div class="media-type-badge badge-yt">▶ YouTube</div>
         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:0.5rem 0;">
-          <iframe
-            src="https://www.youtube.com/embed/hq-ecyyJH8M?si=WJeUEOzrHBBF4pPE"
-            title="AWS Certified AI Practitioner – Roadmap Session"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            loading="lazy"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"
-            itemprop="embedUrl"
-          ></iframe>
+          <iframe src="https://www.youtube.com/embed/hq-ecyyJH8M?si=WJeUEOzrHBBF4pPE" title="AWS Certified AI Practitioner – Roadmap Session" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe>
         </div>
-        <div class="media-title" itemprop="name">AWS Certified AI Practitioner — Roadmap Session</div>
-        <div class="media-meta"><time datetime="2026-03-01" itemprop="uploadDate">Mar 2026</time> · Punjab</div>
-        <meta itemprop="description" content="A comprehensive roadmap session for the AWS Certified AI Practitioner exam at AWS User Group Punjab." />
-        <meta itemprop="url" content="https://youtu.be/hq-ecyyJH8M" />
+        <div class="media-title">AWS Certified AI Practitioner — Roadmap Session</div>
+        <div class="media-meta">Mar 2026 · Punjab</div>
       </div>
 
-      <!-- AWS Community Day Kochi -->
-      <div class="media-card" role="listitem"
-           itemscope itemtype="https://schema.org/VideoObject" itemprop="itemListElement">
+      <div class="media-card" role="listitem">
         <div class="media-type-badge badge-yt">▶ YouTube</div>
         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:0.5rem 0;">
-          <iframe
-            src="https://www.youtube.com/embed/rQvlmRrE-Xs?si=4N5aBhLazs6O4a-t"
-            title="ACDKOCHI25 | Transforming Enterprise Productivity with Amazon QuickSuite and AWS Transform"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            loading="lazy"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"
-            itemprop="embedUrl"
-          ></iframe>
+          <iframe src="https://www.youtube.com/embed/rQvlmRrE-Xs?si=4N5aBhLazs6O4a-t" title="ACDKOCHI25 | Transforming Enterprise Productivity" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe>
         </div>
-        <div class="media-title" itemprop="name">Transforming Enterprise Productivity with Amazon QuickSuite &amp; AWS Transform</div>
-        <div class="media-meta"><time datetime="2025-12-01" itemprop="uploadDate">Dec 2025</time> · AWS Community Day Kochi</div>
-        <meta itemprop="description" content="Vishnu Rachapudi at ACDKOCHI25 — Transforming Enterprise Productivity with Amazon QuickSuite and AWS Transform." />
-        <meta itemprop="url" content="https://youtu.be/rQvlmRrE-Xs" />
+        <div class="media-title">Transforming Enterprise Productivity with Amazon QuickSuite &amp; AWS Transform</div>
+        <div class="media-meta">Dec 2025 · AWS Community Day Kochi</div>
       </div>
 
-      <!-- 0.1% Cloud Masterclass -->
-      <div class="media-card" role="listitem"
-           itemscope itemtype="https://schema.org/VideoObject" itemprop="itemListElement">
+      <div class="media-card" role="listitem">
         <div class="media-type-badge badge-yt">▶ YouTube</div>
         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:0.5rem 0;">
-          <iframe
-            src="https://www.youtube.com/embed/f4Uj-xkZzn4?si=j2auWarJRp9O28MC"
-            title="The 0.1% Cloud Masterclass"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            loading="lazy"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"
-            itemprop="embedUrl"
-          ></iframe>
+          <iframe src="https://www.youtube.com/embed/f4Uj-xkZzn4?si=j2auWarJRp9O28MC" title="The 0.1% Cloud Masterclass" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe>
         </div>
-        <div class="media-title" itemprop="name">The 0.1% Cloud Masterclass</div>
-        <div class="media-meta"><time datetime="2026-01-01" itemprop="uploadDate">Jan 2026</time> · Hyderabad</div>
-        <meta itemprop="description" content="Vishnu Rachapudi's cloud masterclass — advanced AWS architecture and career strategies for the top 0.1% of cloud engineers." />
-        <meta itemprop="url" content="https://youtu.be/f4Uj-xkZzn4" />
+        <div class="media-title">The 0.1% Cloud Masterclass</div>
+        <div class="media-meta">Jan 2026 · Hyderabad</div>
       </div>
 
-      <!-- AWS Inspector -->
-      <div class="media-card" role="listitem"
-           itemscope itemtype="https://schema.org/VideoObject" itemprop="itemListElement">
+      <div class="media-card" role="listitem">
         <div class="media-type-badge badge-yt">▶ YouTube · @CloudAndTFbyVishnu</div>
         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:0.5rem 0;">
-          <iframe
-            src="https://www.youtube.com/embed/iE-hfSW42RY?si=AyNR6AcpDsCSQ0A6"
-            title="Securing Your Code with AWS Inspector: A Comprehensive Guide to Code Security Scanning"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            loading="lazy"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"
-            itemprop="embedUrl"
-          ></iframe>
+          <iframe src="https://www.youtube.com/embed/iE-hfSW42RY?si=AyNR6AcpDsCSQ0A6" title="Securing Your Code with AWS Inspector" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe>
         </div>
-        <div class="media-title" itemprop="name">Securing Your Code with AWS Inspector — Code Security Scanning</div>
-        <div class="media-meta"><time datetime="2026-01-01" itemprop="uploadDate">Jan 2026</time> · Online</div>
-        <meta itemprop="description" content="A comprehensive guide to securing code with AWS Inspector — SAST, SCA, IaC scanning, DevSecOps." />
-        <meta itemprop="url" content="https://youtu.be/iE-hfSW42RY" />
+        <div class="media-title">Securing Your Code with AWS Inspector — Code Security Scanning</div>
+        <div class="media-meta">Jan 2026 · Online</div>
       </div>
 
-      <!-- AWS App Runner -->
-      <div class="media-card" role="listitem"
-           itemscope itemtype="https://schema.org/VideoObject" itemprop="itemListElement">
+      <div class="media-card" role="listitem">
         <div class="media-type-badge badge-yt">▶ YouTube · @CloudAndTFbyVishnu</div>
         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:0.5rem 0;">
-          <iframe
-            src="https://www.youtube.com/embed/WTHnY_Bg2pI?si=CYijE99ilHFiNcpv"
-            title="AWS App Runner – The Easiest Way to Deploy Containers to the Cloud"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            loading="lazy"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"
-            itemprop="embedUrl"
-          ></iframe>
+          <iframe src="https://www.youtube.com/embed/WTHnY_Bg2pI?si=CYijE99ilHFiNcpv" title="AWS App Runner" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;"></iframe>
         </div>
-        <div class="media-title" itemprop="name">AWS App Runner — The Easiest Way to Deploy Containers to the Cloud</div>
-        <div class="media-meta" itemprop="uploadDate">Tutorial · DevOps · @CloudAndTFbyVishnu</div>
-        <meta itemprop="description" content="Vishnu Rachapudi demonstrates AWS App Runner — deploy containerized apps to the cloud in minutes." />
-        <meta itemprop="url" content="https://youtu.be/WTHnY_Bg2pI" />
+        <div class="media-title">AWS App Runner — The Easiest Way to Deploy Containers to the Cloud</div>
+        <div class="media-meta">Tutorial · DevOps · @CloudAndTFbyVishnu</div>
       </div>
 
-      <!-- Spotify — full width -->
-      <div class="media-card" role="listitem" style="grid-column:1/-1;"
-           itemscope itemtype="https://schema.org/PodcastEpisode" itemprop="itemListElement">
+      <div class="media-card" role="listitem" style="grid-column:1/-1;">
         <div class="media-type-badge badge-spot">♫ Spotify</div>
-        <iframe
-          src="https://open.spotify.com/embed/episode/3OTnWRaYcl7FlQtArH3jel?utm_source=generator&theme=0"
-          title="Learn2Upskill Podcast — AWS Cert Journey with Vishnu Rachapudi"
-          loading="lazy"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          style="width:100%;height:152px;border:none;border-radius:8px;margin:0.5rem 0;display:block;"
-          itemprop="embedUrl"
-        ></iframe>
-        <div class="media-title" itemprop="name">Learn2Upskill Podcast — AWS Cert Journey</div>
-        <div class="media-meta"><time datetime="2025-06-01" itemprop="datePublished">Jun 2025</time> · Spotify · Learn2Upskill</div>
-        <meta itemprop="description" content="Vishnu Rachapudi shares his AWS certification journey — from Cloud Practitioner to 14 certs — on the Learn2Upskill Podcast." />
+        <iframe src="https://open.spotify.com/embed/episode/3OTnWRaYcl7FlQtArH3jel?utm_source=generator&theme=0" title="Learn2Upskill Podcast — AWS Cert Journey" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" style="width:100%;height:152px;border:none;border-radius:8px;margin:0.5rem 0;display:block;"></iframe>
+        <div class="media-title">Learn2Upskill Podcast — AWS Cert Journey</div>
+        <div class="media-meta">Jun 2025 · Spotify · Learn2Upskill</div>
       </div>
 
     </div>
@@ -1189,101 +1137,79 @@ body.light .hero-avatar {
     <h2 id="blog-heading">From the <em>Blog</em></h2>
     <div class="blog-grid" role="list" aria-label="Featured blog posts">
 
-   <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-ssm/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Upgrading Windows Server 2016 → 2022 on AWS Without Losing the MAC Address">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-ssm/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Systems Manager</span><span class="tag">Windows Server</span><span class="tag">EC2</span></div>
-        <div class="blog-title" itemprop="headline">A real-world in-place upgrade pattern using AWSEC2-CloneInstanceAndUpgradeWindows, ENI reuse, and a few hard-earned lessons.</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Apr 2026 · 15 min read</div>
+        <div class="blog-title">A real-world in-place upgrade pattern using AWSEC2-CloneInstanceAndUpgradeWindows, ENI reuse, and a few hard-earned lessons.</div>
+        <div class="blog-meta">Apr 2026 · 15 min read</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/velero-eks/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Velero-Based Disaster Recovery for Amazon EKS: A Complete Hands-On Guide">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/velero-eks/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Kubernetes</span><span class="tag">Velero</span><span class="tag">Disaster Recovery</span></div>
-        <div class="blog-title" itemprop="headline">Setting up multi-region active–passive DR for EKS using Velero, S3 Cross-Region Replication, Helm, and IRSA — with every command, every error, and every fix documented.</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Apr 2026 · 15 min read</div>
+        <div class="blog-title">Setting up multi-region active–passive DR for EKS using Velero, S3 Cross-Region Replication, Helm, and IRSA — with every command, every error, and every fix documented.</div>
+        <div class="blog-meta">Apr 2026 · 15 min read</div>
       </a>
-      
-     <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/coldsnap/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Recovering EBS Snapshots with ColdSnap: A Real DR Story from the Field">
+
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/coldsnap/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">EBS</span><span class="tag">Coldsnap</span><span class="tag">Disaster Recovery</span></div>
-        <div class="blog-title" itemprop="headline">21 snapshots, ~5 TB of data, a degraded region, and every conventional recovery path failing one by one. Here's the tool that finally worked — and exactly how we used it.</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Apr 2026 · 10 min read</div>
+        <div class="blog-title">21 snapshots, ~5 TB of data, a degraded region, and every conventional recovery path failing one by one. Here's the tool that finally worked — and exactly how we used it.</div>
+        <div class="blog-meta">Apr 2026 · 10 min read</div>
       </a>
 
-    <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-nova-act/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Testing My Personal Website with Amazon Nova Act">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-nova-act/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Agentic AI</span><span class="tag">Nova</span></div>
-        <div class="blog-title" itemprop="headline">Here's exactly how I built it, what broke, and what Nova Act can actually do beyond a simple smoke test.</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Apr 2026 · 7 min read</div>
+        <div class="blog-title">Here's exactly how I built it, what broke, and what Nova Act can actually do beyond a simple smoke test.</div>
+        <div class="blog-meta">Apr 2026 · 7 min read</div>
       </a>
 
-     <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-s3-files/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="No boto3. No SDK. Just  S3 Files. — read full article">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-s3-files/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Storage</span><span class="tag">Compute</span></div>
-        <div class="blog-title" itemprop="headline">How Amazon S3 Files Turns Your Bucket Into a Drive</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Apr 2026 · 7 min read</div>
+        <div class="blog-title">How Amazon S3 Files Turns Your Bucket Into a Drive</div>
+        <div class="blog-meta">Apr 2026 · 7 min read</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-security-agent-blog/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="I Pentested My Modernized Java App with AWS Security Agent — read full article">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-security-agent-blog/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Security</span><span class="tag">Agentic AI</span></div>
-        <div class="blog-title" itemprop="headline">I Pentested My Modernized Java App with AWS Security Agent — Here's What It Found</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Mar 2026 · 14 min read</div>
+        <div class="blog-title">I Pentested My Modernized Java App with AWS Security Agent — Here's What It Found</div>
+        <div class="blog-meta">Mar 2026 · 14 min read</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-reachability-blog/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Stop Guessing. Start Tracing — read full article">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-reachability-blog/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Networking</span><span class="tag">VPC</span></div>
-        <div class="blog-title" itemprop="headline">Stop Guessing. Start Tracing. — How AWS Reachability Analyzer Found Our Broken Network</div>
-        <div class="blog-desc" itemprop="description">10 VPCs, 1 Transit Gateway, and a jump server that couldn't reach anything. A complete walkthrough for $0.10.</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Mar 2026 · 8 min read</div>
+        <div class="blog-title">Stop Guessing. Start Tracing. — How AWS Reachability Analyzer Found Our Broken Network</div>
+        <div class="blog-desc">10 VPCs, 1 Transit Gateway, and a jump server that couldn't reach anything. A complete walkthrough for $0.10.</div>
+        <div class="blog-meta">Mar 2026 · 8 min read</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-transform-blog/" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="I Modernized a Legacy Java App with AWS Transform — read full article">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/blogs/aws-transform-blog/" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">Transform</span><span class="tag">Agentic AI</span></div>
-        <div class="blog-title" itemprop="headline">I Modernized a Legacy Java App with AWS Transform — Here's What Happened</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Mar 2026 · 12 min read</div>
+        <div class="blog-title">I Modernized a Legacy Java App with AWS Transform — Here's What Happened</div>
+        <div class="blog-meta">Mar 2026 · 12 min read</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/aws-devops-agent/index.html" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="I Tested AWS DevOps Agent — read full article">
+      <a class="blog-card" role="listitem" href="https://www.vishnurachapudi.com/aws-devops-agent/index.html" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">AWS</span><span class="tag">DevOps</span><span class="tag">AIOps</span></div>
-        <div class="blog-title" itemprop="headline">I Tested AWS DevOps Agent — Here's What Happened When I Broke My EC2 Instance</div>
-        <div class="blog-desc" itemprop="description">A deliberate CPU stress test on a t2.medium, watching Amazon's frontier AI agent investigate in real time.</div>
-        <div class="blog-meta" itemprop="datePublished" content="2026-03-01">Mar 2026 · 8 min read</div>
+        <div class="blog-title">I Tested AWS DevOps Agent — Here's What Happened When I Broke My EC2 Instance</div>
+        <div class="blog-desc">A deliberate CPU stress test on a t2.medium, watching Amazon's frontier AI agent investigate in real time.</div>
+        <div class="blog-meta">Mar 2026 · 8 min read</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://dev.to/aws-builders/building-an-aws-daily-helper-assistant-with-strands-agents-and-bedrock-agentcore-2290" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Building an AWS Daily Helper with Strands Agents — read full article">
+      <a class="blog-card" role="listitem" href="https://dev.to/aws-builders/building-an-aws-daily-helper-assistant-with-strands-agents-and-bedrock-agentcore-2290" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">Gen AI</span><span class="tag">Agents</span><span class="tag">Bedrock</span></div>
-        <div class="blog-title" itemprop="headline">Building an AWS Daily Helper with Strands Agents &amp; Bedrock AgentCore</div>
+        <div class="blog-title">Building an AWS Daily Helper with Strands Agents &amp; Bedrock AgentCore</div>
         <div class="blog-meta">Dev.to · AWS Builders</div>
       </a>
 
-      <a class="blog-card" role="listitem" href="https://technodiaryvishnu.hashnode.dev/secure-lint-and-validate-your-terraform-like-a-pro" rel="noopener noreferrer" target="_blank"
-         itemscope itemtype="https://schema.org/BlogPosting"
-         aria-label="Secure, Lint and Validate Your Terraform Like a Pro — read full article">
+      <a class="blog-card" role="listitem" href="https://technodiaryvishnu.hashnode.dev/secure-lint-and-validate-your-terraform-like-a-pro" rel="noopener noreferrer" target="_blank">
         <div class="blog-tags"><span class="tag">Terraform</span><span class="tag">DevOps</span><span class="tag">Security</span></div>
-        <div class="blog-title" itemprop="headline">Secure, Lint and Validate Your Terraform Like a Pro</div>
+        <div class="blog-title">Secure, Lint and Validate Your Terraform Like a Pro</div>
         <div class="blog-meta">Hashnode · TechnoDiary</div>
       </a>
 
     </div>
     <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
-      <a class="btn btn-ghost" href="https://dev.to/vishnu_rachapudi_75e73248" rel="noopener noreferrer" target="_blank" aria-label="View all blog posts on Dev.to">All posts on Dev.to →</a>
-      <a class="btn btn-ghost" href="https://builder.aws.com/community/@vishnu1999?tab=articles" rel="noopener noreferrer" target="_blank" aria-label="View posts on AWS Builder">AWS Builder posts →</a>
-      <a class="btn btn-ghost" href="https://technodiaryvishnu.hashnode.dev" rel="noopener noreferrer" target="_blank" aria-label="Read Hashnode blog">Hashnode →</a>
+      <a class="btn btn-ghost" href="https://dev.to/vishnu_rachapudi_75e73248" rel="noopener noreferrer" target="_blank">All posts on Dev.to →</a>
+      <a class="btn btn-ghost" href="https://builder.aws.com/community/@vishnu1999?tab=articles" rel="noopener noreferrer" target="_blank">AWS Builder posts →</a>
+      <a class="btn btn-ghost" href="https://technodiaryvishnu.hashnode.dev" rel="noopener noreferrer" target="_blank">Hashnode →</a>
     </div>
   </div>
 </section>
@@ -1294,12 +1220,12 @@ body.light .hero-avatar {
     <div class="sec-label">Recognition</div>
     <h2 id="awards-heading"><em>Awards</em> &amp; Milestones</h2>
     <div class="award-grid" role="list" aria-label="Awards and recognition">
-      <div class="award-card" role="listitem" itemscope itemtype="https://schema.org/Award"><div class="award-year">2025</div><div class="award-title" itemprop="name">Trundl Hackathon Winner</div><div class="award-org" itemprop="description">IaC for automated Atlassian deployment</div></div>
-      <div class="award-card" role="listitem" itemscope itemtype="https://schema.org/Award"><div class="award-year">2025</div><div class="award-title" itemprop="name">Top Performer — SUDO</div><div class="award-org">October 2025</div></div>
-      <div class="award-card" role="listitem" itemscope itemtype="https://schema.org/Award"><div class="award-year">2025</div><div class="award-title" itemprop="name">Champion Team — Trundl</div><div class="award-org">Nutanix infra &amp; DR strategy</div></div>
-      <div class="award-card" role="listitem" itemscope itemtype="https://schema.org/Award"><div class="award-year">2024</div><div class="award-title" itemprop="name">Runner-up, AWS Amplify Hackathon</div><div class="award-org">AWS User Group India</div></div>
-      <div class="award-card" role="listitem" itemscope itemtype="https://schema.org/Award"><div class="award-year">2024</div><div class="award-title" itemprop="name">Star Performer — Trundl</div><div class="award-org">AWS Q Business POC</div></div>
-      <div class="award-card" role="listitem" itemscope itemtype="https://schema.org/Award"><div class="award-year">2022</div><div class="award-title" itemprop="name">Rising Star — MassMutual</div><div class="award-org">Annual award, MassMutual India</div></div>
+      <div class="award-card" role="listitem"><div class="award-year">2025</div><div class="award-title">Trundl Hackathon Winner</div><div class="award-org">IaC for automated Atlassian deployment</div></div>
+      <div class="award-card" role="listitem"><div class="award-year">2025</div><div class="award-title">Top Performer — SUDO</div><div class="award-org">October 2025</div></div>
+      <div class="award-card" role="listitem"><div class="award-year">2025</div><div class="award-title">Champion Team — Trundl</div><div class="award-org">Nutanix infra &amp; DR strategy</div></div>
+      <div class="award-card" role="listitem"><div class="award-year">2024</div><div class="award-title">Runner-up, AWS Amplify Hackathon</div><div class="award-org">AWS User Group India</div></div>
+      <div class="award-card" role="listitem"><div class="award-year">2024</div><div class="award-title">Star Performer — Trundl</div><div class="award-org">AWS Q Business POC</div></div>
+      <div class="award-card" role="listitem"><div class="award-year">2022</div><div class="award-title">Rising Star — MassMutual</div><div class="award-org">Annual award, MassMutual India</div></div>
     </div>
   </div>
 </section>
@@ -1310,6 +1236,7 @@ body.light .hero-avatar {
     <div class="sec-label">Journey</div>
     <h2 id="timeline-heading">My <em>Journey</em></h2>
     <div class="timeline" role="list" aria-label="Career timeline">
+      <div class="tl-item" role="listitem"><div class="tl-date">Apr 2026</div><div><div class="tl-title">AWS Summit Bengaluru 2026</div><div class="tl-body">Spoke at Developer Community Theatre on keeping Serverless modern with AWS Transform.</div></div></div>
       <div class="tl-item" role="listitem"><div class="tl-date">Mar 2026</div><div><div class="tl-title">14x AWS · Cloud &amp; AI @ SUDO</div><div class="tl-body">Building, writing, speaking, mentoring. The journey continues.</div></div></div>
       <div class="tl-item" role="listitem"><div class="tl-date">Dec 2025</div><div><div class="tl-title">Kochi + MLRIT</div><div class="tl-body">Spoke at Kochi AI/ML. Workshop at MLRIT.</div></div></div>
       <div class="tl-item" role="listitem"><div class="tl-date">Oct 2025</div><div><div class="tl-title">GITEX Global + AWS Community Day UAE</div><div class="tl-body">First international talks. Enterprise Productivity with Family of Qs.</div></div></div>
@@ -1330,13 +1257,13 @@ body.light .hero-avatar {
     <div class="sec-label">Connect</div>
     <h2 id="connect-heading">Find me <em>everywhere</em></h2>
     <div class="social-row" role="list" aria-label="Social media and professional profiles">
-      <a class="soc-link" role="listitem" href="https://www.linkedin.com/in/vishnu-rachapudi-28956920b/" rel="noopener noreferrer" target="_blank" aria-label="LinkedIn profile">LinkedIn</a>
-      <a class="soc-link" role="listitem" href="https://www.youtube.com/@CloudAndTFbyVishnu" rel="noopener noreferrer" target="_blank" aria-label="YouTube channel — VishTalks" style="border-color:rgba(248,113,113,0.3);color:#f87171;">▶ YouTube</a>
-      <a class="soc-link" role="listitem" href="https://dev.to/vishnu_rachapudi_75e73248" rel="noopener noreferrer" target="_blank" aria-label="Dev.to blog">Dev.to</a>
-      <a class="soc-link" role="listitem" href="https://github.com/aquavis12" rel="noopener noreferrer" target="_blank" aria-label="GitHub profile">GitHub</a>
-      <a class="soc-link" role="listitem" href="https://www.credly.com/users/venkata-pavan-vishnu-rachapudi" rel="noopener noreferrer" target="_blank" aria-label="Credly certifications">Credly</a>
-      <a class="soc-link" role="listitem" href="https://builder.aws.com/community/@vishnu1999" rel="noopener noreferrer" target="_blank" aria-label="AWS Community Builder profile">AWS Builder</a>
-      <a class="soc-link" role="listitem" href="https://technodiaryvishnu.hashnode.dev" rel="noopener noreferrer" target="_blank" aria-label="Hashnode blog">Hashnode</a>
+      <a class="soc-link" role="listitem" href="https://www.linkedin.com/in/vishnu-rachapudi-28956920b/" rel="noopener noreferrer" target="_blank">LinkedIn</a>
+      <a class="soc-link" role="listitem" href="https://www.youtube.com/@CloudAndTFbyVishnu" rel="noopener noreferrer" target="_blank" style="border-color:rgba(248,113,113,0.3);color:#f87171;">▶ YouTube</a>
+      <a class="soc-link" role="listitem" href="https://dev.to/vishnu_rachapudi_75e73248" rel="noopener noreferrer" target="_blank">Dev.to</a>
+      <a class="soc-link" role="listitem" href="https://github.com/aquavis12" rel="noopener noreferrer" target="_blank">GitHub</a>
+      <a class="soc-link" role="listitem" href="https://www.credly.com/users/venkata-pavan-vishnu-rachapudi" rel="noopener noreferrer" target="_blank">Credly</a>
+      <a class="soc-link" role="listitem" href="https://builder.aws.com/community/@vishnu1999" rel="noopener noreferrer" target="_blank">AWS Builder</a>
+      <a class="soc-link" role="listitem" href="https://technodiaryvishnu.hashnode.dev" rel="noopener noreferrer" target="_blank">Hashnode</a>
     </div>
   </div>
 </section>
@@ -1344,96 +1271,339 @@ body.light .hero-avatar {
 <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
 <footer role="contentinfo">
   <div class="wrap">
-    <p itemscope itemtype="https://schema.org/Person">
-      <span itemprop="name">Vishnu Rachapudi</span> ·
-      <span itemprop="jobTitle">Cloud &amp; AI Engineer</span> ·
-      <a href="https://builder.aws.com/community/@vishnu1999" rel="noopener noreferrer" target="_blank" itemprop="affiliation">AWS Community Builder (Security)</a> ·
-      <span itemprop="addressLocality">Hyderabad</span>
+    <p>
+      Vishnu Rachapudi ·
+      Cloud &amp; AI Engineer ·
+      <a href="https://builder.aws.com/community/@vishnu1999" rel="noopener noreferrer" target="_blank">AWS Community Builder (Security)</a> ·
+      Hyderabad
     </p>
     <p style="margin-top:0.5rem;">© 2026 · <a href="https://www.vishnurachapudi.com/">vishnurachapudi.com</a></p>
   </div>
 </footer>
 
-<style>
-  @media (max-width:700px) {
-    .about-grid { grid-template-columns: 1fr !important; }
-  }
-</style>
-
 <script>
-  (function () {
+(function () {
 
-    /* ── THEME TOGGLE ── */
-    const btn = document.getElementById('themeToggle');
-    const icon = document.getElementById('toggleIcon');
-    const STORAGE_KEY = 'portfolio-theme';
-    const ICONS = { dark: '☀', light: '☾' };
+  /* ── THEME TOGGLE ── */
+  const btn = document.getElementById('themeToggle');
+  const icon = document.getElementById('toggleIcon');
+  const STORAGE_KEY = 'portfolio-theme';
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === 'light') { document.body.classList.add('light'); if (icon) icon.textContent = '☾'; }
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light');
+      if (icon) icon.textContent = isLight ? '☾' : '☀';
+      localStorage.setItem(STORAGE_KEY, isLight ? 'light' : 'dark');
+    });
+  }
 
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'light') {
-      document.body.classList.add('light');
-      if (icon) icon.textContent = ICONS.light;
+  /* ══════════════════════════════
+     GALLERY DATA
+  ══════════════════════════════ */
+  const GALLERY = [
+    // AWS Summit Bengaluru 2026
+    {
+      src:     'gallery/gallery-blr-1.jpg',
+      thumb:   'gallery/gallery-blr-1.jpg',
+      title:   'AWS Summit Bengaluru 2026 — Speaking',
+      meta:    'Bengaluru, India · April 2026',
+      tag:     'AWS Summit BLR',
+      filter:  'blr',
+      alt:     'Vishnu Rachapudi receiving recognition at AWS Summit Bengaluru 2026'
+    },
+    {
+      src:     'gallery/gallery-blr-2.jpg',
+      thumb:   'gallery/gallery-blr-2.jpg',
+      title:   'AWS Summit Bengaluru 2026 — On Stage',
+      meta:    'Developer Community Theatre · April 23, 2026',
+      tag:     'AWS Summit BLR',
+      filter:  'blr',
+      alt:     'Vishnu Rachapudi presenting at AWS Summit Bengaluru 2026 Developer Community Theatre'
+    },
+    {
+      src:     'gallery/gallery-blr-3.jpg',
+      thumb:   'gallery/gallery-blr-3.jpg',
+      title:   'AWS Summit Bengaluru 2026 — Developer Community Theatre',
+      meta:    'Serverless Lambda Runtimes session · April 23, 2026',
+      tag:     'AWS Summit BLR',
+      filter:  'blr',
+      alt:     'Vishnu Rachapudi at AWS Developer Community Theatre, AWS Summit Bengaluru 2026'
+    },
+    {
+      src:     'gallery/gallery-blr-4.jpg',
+      thumb:   'gallery/gallery-blr-4.jpg',
+      title:   'AWS Summit Bengaluru 2026 — AWS Startups',
+      meta:    'Bengaluru, India · April 2026',
+      tag:     'AWS Summit BLR',
+      filter:  'blr',
+      alt:     'Vishnu Rachapudi at AWS Startups booth — I am the Next Unicorn, AWS Summit Bengaluru 2026'
+    },
+    // International
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-12.webp',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-12.webp',
+      title:   'AWS Community Day UAE 2025',
+      meta:    'Dubai, UAE · October 2025',
+      tag:     'International',
+      filter:  'intl',
+      alt:     'Vishnu Rachapudi on stage at AWS Community Day UAE 2025 in Dubai'
+    },
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-2.png',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-2.png',
+      title:   'GITEX Global 2025',
+      meta:    'Dubai, UAE · October 2025',
+      tag:     'GITEX',
+      filter:  'intl',
+      alt:     'Vishnu Rachapudi presenting Family of Qs at GITEX Global 2025 Dubai'
+    },
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-11.png',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-11.png',
+      title:   'Golden Jacket Crew — GITEX',
+      meta:    'GITEX Global 2025, Dubai',
+      tag:     'Golden Jacket',
+      filter:  'intl',
+      alt:     'Vishnu Rachapudi with the AWS Golden Jacket holders at GITEX Global 2025'
+    },
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-7.png',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-7.png',
+      title:   'Enterprise Agentic AI Panel — AWS × SUDO × IDC',
+      meta:    'Dubai, UAE',
+      tag:     'Panel',
+      filter:  'intl',
+      alt:     'Vishnu Rachapudi at Enterprise Agentic AI panel with AWS, SUDO Consultants, and IDC'
+    },
+    // India
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-1.png',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-1.png',
+      title:   'AWS Community Day Kochi — On Stage',
+      meta:    'Kochi, India · December 2025',
+      tag:     'Kochi AI/ML',
+      filter:  'india',
+      alt:     'Vishnu Rachapudi on stage at AWS Community Day Kochi AI/ML Edition'
+    },
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-13.jpg',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-13.jpg',
+      title:   'AWS Cloud Club TIU — Navigating the AWS Ecosystem',
+      meta:    'Online · April 2026',
+      tag:     'Cloud Club',
+      filter:  'india',
+      alt:     'Vishnu Rachapudi speaking at AWS Cloud Club TIU'
+    },
+    {
+      src:     'https://www.vishnurachapudi.com/gallery/gallery-14.jpg',
+      thumb:   'https://www.vishnurachapudi.com/gallery/gallery-14.jpg',
+      title:   'AWS Cloud Club TIU — Session Slide View',
+      meta:    'Online · April 11, 2026',
+      tag:     'Cloud Club',
+      filter:  'india',
+      alt:     'Vishnu Rachapudi presenting at AWS Cloud Club TIU online event'
     }
+  ];
 
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const isLight = document.body.classList.toggle('light');
-        if (icon) icon.textContent = isLight ? ICONS.light : ICONS.dark;
-        localStorage.setItem(STORAGE_KEY, isLight ? 'light' : 'dark');
-      });
-    }
+  let filteredItems = [...GALLERY];
+  let currentIdx = 0;
+  let autoTimer = null;
 
-    /* ── GALLERY LIGHTBOX ── */
-    var items = Array.from(document.querySelectorAll('.gp-item'));
-    var lb = document.getElementById('lightbox');
-    var lbImg = document.getElementById('lb-img');
-    var lbTitle = document.getElementById('lb-title');
-    var lbMeta = document.getElementById('lb-meta');
-    var current = 0;
+  const stage    = document.getElementById('carouselStage');
+  const thumbsEl = document.getElementById('carouselThumbs');
+  const dotsEl   = document.getElementById('carouselDots');
+  const countEl  = document.getElementById('galleryCount');
 
-    function openLb(idx) {
-      current = idx;
-      var el = items[idx];
-      lbImg.src = el.dataset.src;
-      lbImg.alt = el.querySelector('img') ? el.querySelector('img').alt : '';
-      lbTitle.textContent = el.dataset.title || '';
-      lbMeta.textContent = el.dataset.meta || '';
-      lb.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
+  /* Build carousel */
+  function buildCarousel() {
+    stage.innerHTML = '';
+    thumbsEl.innerHTML = '';
+    dotsEl.innerHTML = '';
 
-    function closeLb() {
-      lb.classList.remove('open');
-      document.body.style.overflow = '';
-    }
+    filteredItems.forEach((item, i) => {
+      // Stage image
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = item.alt;
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      if (i === currentIdx) img.classList.add('active');
+      stage.appendChild(img);
 
-    items.forEach(function (el, i) {
-      el.addEventListener('click', function () { openLb(i); });
-      el.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(i); }
-      });
+      // Caption (built once, toggled via JS)
+      // Thumb
+      const thumb = document.createElement('div');
+      thumb.className = 'carousel-thumb' + (i === currentIdx ? ' active' : '');
+      thumb.setAttribute('role', 'listitem');
+      thumb.setAttribute('aria-label', item.title);
+      thumb.setAttribute('tabindex', '0');
+      const tImg = document.createElement('img');
+      tImg.src = item.thumb;
+      tImg.alt = item.title;
+      tImg.loading = 'lazy';
+      thumb.appendChild(tImg);
+      thumb.addEventListener('click', () => goTo(i));
+      thumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo(i); } });
+      thumbsEl.appendChild(thumb);
+
+      // Dot
+      const dot = document.createElement('div');
+      dot.className = 'carousel-dot' + (i === currentIdx ? ' active' : '');
+      dot.setAttribute('role', 'listitem');
+      dot.setAttribute('aria-label', `Photo ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(dot);
     });
 
-    var lbClose = document.getElementById('lb-close');
-    var lbPrev  = document.getElementById('lb-prev');
-    var lbNext  = document.getElementById('lb-next');
+    // Caption overlay (single, updated on slide change)
+    const cap = document.createElement('div');
+    cap.className = 'carousel-caption';
+    cap.id = 'carouselCaption';
+    cap.innerHTML = `
+      <div class="caption-text">
+        <div class="caption-tag" id="capTag"></div>
+        <div class="caption-title" id="capTitle"></div>
+        <div class="caption-meta" id="capMeta"></div>
+      </div>
+      <div class="caption-counter" id="capCounter"></div>`;
+    stage.appendChild(cap);
 
-    if (lbClose) lbClose.addEventListener('click', closeLb);
-    if (lbPrev)  lbPrev.addEventListener('click', function () { openLb((current - 1 + items.length) % items.length); });
-    if (lbNext)  lbNext.addEventListener('click', function () { openLb((current + 1) % items.length); });
+    updateCaption();
+    updateCount();
+  }
 
-    if (lb) {
-      lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
-    }
+  function updateCaption() {
+    const item = filteredItems[currentIdx];
+    if (!item) return;
+    document.getElementById('capTag').textContent   = item.tag;
+    document.getElementById('capTitle').textContent = item.title;
+    document.getElementById('capMeta').textContent  = item.meta;
+    document.getElementById('capCounter').textContent = `${currentIdx + 1} / ${filteredItems.length}`;
+  }
 
-    document.addEventListener('keydown', function (e) {
-      if (!lb || !lb.classList.contains('open')) return;
-      if (e.key === 'Escape')     closeLb();
-      if (e.key === 'ArrowLeft')  openLb((current - 1 + items.length) % items.length);
-      if (e.key === 'ArrowRight') openLb((current + 1) % items.length);
+  function updateCount() {
+    if (countEl) countEl.textContent = `${filteredItems.length} photos · AWS Summit · GITEX · Community Days · Panels`;
+  }
+
+  function goTo(idx) {
+    const imgs   = stage.querySelectorAll('img');
+    const thumbs = thumbsEl.querySelectorAll('.carousel-thumb');
+    const dots   = dotsEl.querySelectorAll('.carousel-dot');
+
+    imgs[currentIdx]?.classList.remove('active');
+    thumbs[currentIdx]?.classList.remove('active');
+    dots[currentIdx]?.classList.remove('active');
+
+    currentIdx = (idx + filteredItems.length) % filteredItems.length;
+
+    imgs[currentIdx]?.classList.add('active');
+    thumbs[currentIdx]?.classList.add('active');
+    dots[currentIdx]?.classList.add('active');
+
+    // Scroll thumb into view
+    const activeThumb = thumbs[currentIdx];
+    if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+    updateCaption();
+    resetAutoplay();
+  }
+
+  /* Autoplay */
+  function startAutoplay() {
+    autoTimer = setInterval(() => goTo(currentIdx + 1), 5000);
+  }
+  function resetAutoplay() {
+    clearInterval(autoTimer);
+    startAutoplay();
+  }
+
+  /* Prev/Next buttons */
+  document.getElementById('carouselPrev')?.addEventListener('click', () => goTo(currentIdx - 1));
+  document.getElementById('carouselNext')?.addEventListener('click', () => goTo(currentIdx + 1));
+
+  /* Keyboard nav on carousel */
+  document.getElementById('galleryCarousel')?.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(currentIdx - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); goTo(currentIdx + 1); }
+  });
+
+  /* Touch swipe */
+  let touchStartX = 0;
+  stage?.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  stage?.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) goTo(dx < 0 ? currentIdx + 1 : currentIdx - 1);
+  });
+
+  /* Expand → lightbox */
+  document.getElementById('carouselExpand')?.addEventListener('click', () => {
+    openLightbox(currentIdx);
+  });
+  stage?.addEventListener('click', e => {
+    if (!e.target.classList.contains('carousel-btn') && e.target.tagName !== 'BUTTON') openLightbox(currentIdx);
+  });
+
+  /* Filter tabs */
+  document.querySelectorAll('.gallery-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const f = tab.dataset.filter;
+      filteredItems = f === 'all' ? [...GALLERY] : GALLERY.filter(g => g.filter === f);
+      currentIdx = 0;
+      buildCarousel();
+      resetAutoplay();
     });
+  });
 
-  })();
+  /* ── LIGHTBOX ── */
+  const lb      = document.getElementById('lightbox');
+  const lbImg   = document.getElementById('lb-img');
+  const lbTitle = document.getElementById('lb-title');
+  const lbMeta  = document.getElementById('lb-meta');
+  let lbIdx = 0;
+
+  function openLightbox(idx) {
+    lbIdx = idx;
+    const item = filteredItems[idx];
+    lbImg.src = item.src;
+    lbImg.alt = item.alt;
+    lbTitle.textContent = item.title;
+    lbMeta.textContent  = item.meta;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    clearInterval(autoTimer);
+  }
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    startAutoplay();
+  }
+  function lbNav(dir) {
+    lbIdx = (lbIdx + dir + filteredItems.length) % filteredItems.length;
+    const item = filteredItems[lbIdx];
+    lbImg.src = item.src;
+    lbImg.alt = item.alt;
+    lbTitle.textContent = item.title;
+    lbMeta.textContent  = item.meta;
+  }
+
+  document.getElementById('lb-close')?.addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev')?.addEventListener('click', () => lbNav(-1));
+  document.getElementById('lb-next')?.addEventListener('click', () => lbNav(1));
+  lb?.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lb?.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  lbNav(-1);
+    if (e.key === 'ArrowRight') lbNav(1);
+  });
+
+  /* Init */
+  buildCarousel();
+  startAutoplay();
+
+})();
 </script>
 </body>
 </html>
